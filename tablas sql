@@ -9,7 +9,7 @@ CREATE TABLE Usuarios{
 
 CREATE TABLE Mensajes{
 	id INT NOT NULL autoincrement,
-	userId INT NOT NULL;
+	userId INT NOT NULL,
 	respuesta INT,
 	retweet INT,
 	text VARCHAR(280)  NULL,
