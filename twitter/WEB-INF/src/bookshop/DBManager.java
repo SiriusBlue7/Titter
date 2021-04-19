@@ -1,34 +1,32 @@
-package bookshop;
+package twitter;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.sql.DataSource;
 import javax.naming.NamingException;
 import javax.naming.InitialContext;
 import javax.naming.Context;
+import javax.sql.DataSource;
 
 
 public class DBManager implements AutoCloseable {
 
     private Connection connection;
 
-    public DBManager() throws SQLException, NamingException{
+    public DBManager() throws SQLException, NamingException {
         connect();
     }
 
-   	private void connect() throws SQLException, NamingException {
-    	Context initCtx = new InitialContext();
-    	Context envCtx = (Context) initCtx.lookup("java:comp/env");
-    	DataSource ds = (DataSource) envCtx.lookup("jdbc/BookShop");
-    	connection = ds.getConnection();
-	}
+    private void connect() throws SQLException, NamingException {
+        Context initCtx = new InitialContext();
+        Context envCtx = (Context) initCtx.lookup("java:comp/env");
+        DataSource ds = (DataSource) envCtx.lookup("jdbc/BookShop");
+        connection = ds.getConnection();
+    }
 
     /**
      * Close the connection to the database if it is still open.
@@ -41,152 +39,105 @@ public class DBManager implements AutoCloseable {
         connection = null;
     }
 
-    /**
-     * Return the number of units in stock of the given book.
+    /*
+     * Busca y devuelve un usuario buscnadolo por su nombre corto
      *
-     * @param book The book object.
-     * @return The number of units in stock, or 0 if the book does not
-     *         exist in the database.
-     * @throws SQLException If somthing fails with the DB.
      */
-    public int getStock(Book book) throws SQLException {
-		Book libro= null;
-        return getStock(book.getId());
+    public User searchUser(String short_name) throws SQLException {
+      // crea la busqueda
+      String query = " SELECT * FROM Usuarios WHERE short_name=?";
+      // creamos el usuario para rellenarlo
+      User usuario = new User();
+      try ( PreparedStatement ps = con.prepareStatement(query)) {
+        ps.setString(1, short_name);
+        ResultSet rs = ps.executeQuery();
+        // si el resultado existe lo pasamos al usuario creado
+        if(rs != null){
+          usuario.setId(rs.getInt("id"));
+          usuario.setShort_name(rs.getString("short_name"));
+          usuario.setLong_name(rs.getString("long_name"));
+          usuario.setMail(rs.getString("mail"));
+          usuario.setPassword(rs.getString("password"));
+        }
+      }
+        return usuario;
     }
 
-    /**
-     * Return the number of units in stock of the given book.
-     *
-     * @param bookId The book identifier in the database.
-     * @return The number of units in stock, or 0 if the book does not
-     *         exist in the database.
+    /*
+     * esta funcion comprueba si el nombre, el nombre corto y el email
+     * estan libres en la base de datos
+     * return:
+     * 1: el nombre corto ya esta registrado
+     * 2: el nombre ya esta registrado
+     * 3: el mail ya esta registrado
+     * 0: ninguno de los parametros esta registrado
      */
-    public int getStock(int bookId) throws SQLException {
+    public int isDataFree(String name, String shortName, String email) throws SQLException{
+      String query_short = " SELECT short_name FROM Usuarios WHERE short_name=?";
+      String query_name = " SELECT long_name FROM Usuarios WHERE long_name=?";
+      String query_mail = " SELECT mail FROM Usuarios WHERE mail=?";
+      try ( PreparedStatement ps = con.prepareStatement(query_short);
+            PreparedStatement pn = con.prepareStatement(query_name);
+            PreparedStatement pm = con.prepareStatement(query_mail)) {
+        ps.setString(1, short_name);
+        pn.setString(1, name);
+        pm.setString(1, mail);
 
-		String query = " SELECT *" + " FROM Inventario WHERE libro='"+ bookId + "'";
-		try ( Statement stmt = connection . createStatement () ) {
-				  ResultSet rs = stmt . executeQuery ( query );
-				  while ( rs . next () ) {
-				    int id = rs.getInt("libro");
-				    int numero = rs.getInt("numero");
-				    //En esta método no definimos el sibn ya que se mete por parametro
-					System.out.println("el libro con id : " + bookId + " tiene disponibles "+ numero +" unidades");
-				  }
-				}
+        ResultSet rs = ps.executeQuery();
+        ResultSet rn = pn.executeQuery();
+        ResultSet rm = pm.executeQuery();
+
+        if(rs != null) return 1;
+        if(rn != null) return 2;
+        if(rm != null) return 3;
         return 0;
+      }
     }
 
-
-    /**
-     * Search book by ISBN.
+    /*
+     * añade un usuario a la base de datos
      *
-     * @param isbn The ISBN of the book.
-     * @return The Book object, or null if not found.
-     * @throws SQLException If somthing fails with the DB.
      */
-    public Book searchBook(String isbn) throws SQLException {
+    public void addUser(User usuario) throws SQLException{
 
-        Book libro= null;
-        String query = " SELECT *" + " FROM Libros WHERE isbn='" + isbn + "'";
-        try ( Statement stmt = connection . createStatement () ) {
-          ResultSet rs = stmt . executeQuery ( query );
-          while ( rs . next () ) {
-            int id = rs.getInt("id");
-            String titulo = rs.getString("titulo");
-            //En esta método no definimos el sibn ya que se mete por parametro
-            int anyo = rs.getInt("anyo");
-            float precio = rs.getFloat("precio");
+      String query = "INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES ('?', '?','?','?')";
 
-            //Una vez guardados los datos del libro, lo definimos y lo rellenamos
-            libro = new Book();
-            libro.setId(id);
-            libro.setTitle(titulo);
-            libro.setIsbn(isbn);
-            libro.setYear(anyo);
-          }
-        }
-        return libro;
-    }
-    /**
-     * Sell a book.
-     *
-     * @param book The book.
-     * @param units Number of units that are being sold.
-     * @return True if the operation succeeds, or false otherwise
-     *         (e.g. when the stock of the book is not big enough).
-     * @throws SQLException If somthing fails with the DB.
-     */
-    public boolean sellBook(Book book, int units) throws SQLException {
-        return sellBook(book.getId(), units);
+      try ( PreparedStatement ps = con.prepareStatement(query)){
+        ps.setString(1, usuario.getShort_name());
+        ps.setString(2, usuario.getLong_name());
+        ps.setString(3, usuario.getMail());
+        ps.setString(4, usuario.getPassword());
+
+        ResultSet rs = ps.executeQuery();
+      }
     }
 
-    /**
-     * Sell a book.
-     *
-     * @param book The book's identifier.
-     * @param units Number of units that are being sold.
-     * @return True if the operation succeeds, or false otherwise
-     *         (e.g. when the stock of the book is not big enough).
-     * @throws SQLException If something fails with the DB.
+    /*
+     * devuelve un ArrayList con los mensajes relacionados con el id
+     * del usuario
      */
-    public boolean sellBook(int book, int units) throws SQLException {
-        //Lo que tenemos que hacer es
-        int unidades;
-        String query = " SELECT numero" + " FROM Inventario WHERE libro='" + book + "' FOR UPDATE";
-        try ( Statement stmt1 = connection . createStatement () ;
-              Statement stmt2 = connection . createStatement ()) {
-          ResultSet rs1 = stmt1 . executeQuery ( query );
-           unidades = rs1.getInt("numero");
+     //Necesaria revision y terminar
+    public List<Message> listMessages(int id) throws SQLException{
+      String query = "SELECT Mensajes.text AS mensajes , Mensajes.userId AS id , Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet ,  FROM Usuarios INNER JOIN  DESC ";
 
-          if (unidades <= 0 || unidades < units) {
-            return false;
-          }
-          unidades = unidades - units;
-          String query2 = "UPDATE Inventario" + " SET numero='"+ unidades +"' WHERE libro='" + book + "'";
+		  ArrayList<Message> buzon = new ArrayList<Message>();
 
-            ResultSet rs2 = stmt2 . executeQuery ( query2 );
-              return true;
-            }
-    }
-  	public User searchUser(int id) throws SQLException{
-        String query = "SELECT * FROM Usuarios WHERE id=?";
-        User user;
-        try(PreparedStatement pst = connection.PreparedStatement(query)){
-          pst.setInt(1, id);
-          ResultSet rs = pst.executeQuery(query);
-          user = new User();
-          user.setId(id);
-          user.setShort_name(rs.getString("short_name"));
-          user.setLong_name(rs.getString("long_name"));
-          user.setMail(rs.getString("mail"));
-          user.setPassword(rs.getString("password"));
-        }
-      return user;
-  	}
+      try(Statement stmt = connection.createStatement()) {
+        ResultSet rs = stmt.executeQuery(query);
+        while(rs.next()) {
+		    //Creamos el libro dentro del While para que no haya conflictos al introducirlo en el ArrayList
+		      Message mensaje = new Message();
+          mensaje.setId(null);
+          mensaje.setUserId(null);
+          mensaje.setText(rs.getString("mensajes"));
+          mensaje.setShortName(rs.getString("nick"));
+          mensaje.setLongName(rs.getString("name"));
 
-    /**
-     * Return a list with all the books in the database.
-     *
-     * @return List with all the books.
-     * @throws SQLException If something fails with the DB.
-     */
-    public List<Book> listBooks() throws SQLException {
-        String query = " SELECT *" + " FROM Libros ";
-		ArrayList<Book> listaLibro = new ArrayList<Book>();
-      try ( Statement stmt = connection.createStatement () ) {
-        ResultSet rs = stmt . executeQuery ( query );
-        while ( rs . next () ) {
-		//Creamos el libro dentro del While para que no haya conflictos al introducirlo en el ArrayList
-		  Book libro = new Book();
-          libro.setId(rs.getInt("id"));
-          libro.setTitle(rs.getString("titulo"));
-          libro.setIsbn(rs.getString("isbn"));
-          libro.setYear(rs.getInt("anyo"));
-          float precio = rs.getFloat("precio");
-			listaLibro.add(libro);
+			    buzon.add(libro);
 
         }
       }
-        return listaLibro;
+      return buzon;
     }
+
 }
