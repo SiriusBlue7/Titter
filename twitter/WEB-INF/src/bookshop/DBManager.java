@@ -8,26 +8,28 @@ import java.sql.Statement;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
+
+import javax.sql.DataSource;
 import javax.naming.NamingException;
 import javax.naming.InitialContext;
 import javax.naming.Context;
-import javax.sql.DataSource;
 
 
 public class DBManager implements AutoCloseable {
 
     private Connection connection;
 
-    public DBManager() throws SQLException, NamingException {
+    public DBManager() throws SQLException, NamingException{
         connect();
     }
 
-    private void connect() throws SQLException, NamingException {
-        Context initCtx = new InitialContext();
-        Context envCtx = (Context) initCtx.lookup("java:comp/env");
-        DataSource ds = (DataSource) envCtx.lookup("jdbc/BookShop");
-        connection = ds.getConnection();
-    }
+   	private void connect() throws SQLException, NamingException {
+    	Context initCtx = new InitialContext();
+    	Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    	DataSource ds = (DataSource) envCtx.lookup("jdbc/BookShop");
+    	connection = ds.getConnection();
+	}
 
     /**
      * Close the connection to the database if it is still open.
@@ -40,10 +42,6 @@ public class DBManager implements AutoCloseable {
         connection = null;
     }
 
-    /*
-     * Busca y devuelve un usuario buscnadolo por su nombre corto
-     *
-     */
     public User searchUser(String short_name) throws SQLException {
       // crea la busqueda
       String query = " SELECT * FROM Usuarios WHERE short_name=?";
@@ -63,18 +61,14 @@ public class DBManager implements AutoCloseable {
       }
         return usuario;
     }
-
-    /*
-     * Busca y devuelve un usuario buscnadolo por su nombre corto
-     *
-     */
-    public User searchUserId(int iduser) throws SQLException {
+    public User authenticate(String short_name, String password) throws SQLException {
       // crea la busqueda
-      String query = " SELECT * FROM Usuarios WHERE id=?";
+      String query = " SELECT * FROM Usuarios WHERE short_name=? AND password=?";
       // creamos el usuario para rellenarlo
       User usuario = new User();
       try ( PreparedStatement ps = con.prepareStatement(query)) {
-        ps.setString(1, iduser);
+        ps.setString(1, short_name);
+        ps.setString(2,password);
         ResultSet rs = ps.executeQuery();
         // si el resultado existe lo pasamos al usuario creado
         if(rs != null){
@@ -87,8 +81,6 @@ public class DBManager implements AutoCloseable {
       }
         return usuario;
     }
-
-
     /*
      * esta funcion comprueba si el nombre, el nombre corto y el email
      * estan libres en la base de datos
@@ -126,7 +118,7 @@ public class DBManager implements AutoCloseable {
      */
     public void addUser(User usuario) throws SQLException{
 
-      String query = "INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES ('?', '?', '?', '?')";
+      String query = "INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES ('?', '?','?','?')";
 
       try ( PreparedStatement ps = con.prepareStatement(query)){
         ps.setString(1, usuario.getShort_name());
@@ -142,9 +134,9 @@ public class DBManager implements AutoCloseable {
      * devuelve un ArrayList con los mensajes relacionados con el id
      * del usuario
      */
-     //Necesaria revision
+     //Necesaria revision y terminar
     public List<Message> listMessages(int id) throws SQLException{
-      String query = "SELECT Mensajes.text AS mensajes , Mensajes.userId AS id , Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet , Mensajes. FROM Usuarios INNER JOIN Seguidos ON id=Seguidos.user INNER JOIN Mensajes ON Seguidos.seguido=Mensajes.userId DESC ";
+      String query = "SELECT Mensajes.text AS mensajes , Mensajes.userId AS id , Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet ,  FROM Usuarios INNER JOIN  DESC ";
 
 		  ArrayList<Message> buzon = new ArrayList<Message>();
 
@@ -158,12 +150,28 @@ public class DBManager implements AutoCloseable {
           mensaje.setText(rs.getString("mensajes"));
           mensaje.setShortName(rs.getString("nick"));
           mensaje.setLongName(rs.getString("name"));
-
+          mensaje.setDate(rs.getTimestamp("fecha"));
 			    buzon.add(libro);
 
         }
       }
       return buzon;
     }
+
+  	public User searchUser(int id) throws SQLException{
+        String query = "SELECT * FROM Usuarios WHERE id=?";
+        User user;
+        try(PreparedStatement pst = connection.PreparedStatement(query)){
+          pst.setInt(1, id);
+          ResultSet rs = pst.executeQuery(query);
+          user = new User();
+          user.setId(id);
+          user.setShort_name(rs.getString("short_name"));
+          user.setLong_name(rs.getString("long_name"));
+          user.setMail(rs.getString("mail"));
+          user.setPassword(rs.getString("password"));
+        }
+      return user;
+  	}
 
 }

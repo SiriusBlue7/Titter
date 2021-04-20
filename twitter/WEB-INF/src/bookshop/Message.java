@@ -1,4 +1,5 @@
 package twitter;
+import java.util.Date;
 
 public class Message{
   private int id;
@@ -8,6 +9,8 @@ public class Message{
   private int retweet;
   private String shortName;
   private String longName;
+  private Date fecha;
+
 
   public int getId(){
     return id;
@@ -37,6 +40,10 @@ public class Message{
     return longName;
   }
 
+  public Date getDate(){
+    return fecha;
+  }
+
   public void setId(int id){
     this.id = id;
   }
@@ -44,7 +51,6 @@ public class Message{
   public void setUserId(int id){
     this.userId = id;
   }
-
   public void setText(String text){
     this.text = text;
   }
@@ -64,4 +70,9 @@ public class Message{
   public void setLongName(String name){
     this.longName = name;
   }
+
+  public void setDate(Date fecha){
+    this.fecha = fecha;
+  }
+
 }
