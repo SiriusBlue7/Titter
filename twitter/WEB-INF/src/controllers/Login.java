@@ -1,5 +1,5 @@
 package controllers;
-import bookshop.*;//Esto accede a la libreria que hemos creado nosotros en BookShop y podamos acceder a llamarlo
+import twitter.*;//Esto accede a la libreria que hemos creado nosotros en BookShop y podamos acceder a llamarlo
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet("/login")
 public class Login extends HttpServlet {
-  public void doGet(HttpServletRequest request, HttpServletResponse response)
+  public void doPost(HttpServletRequest request, HttpServletResponse response)
           throws IOException, ServletException {
       // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
@@ -31,13 +31,11 @@ public class Login extends HttpServlet {
             String user = request.getParameter("user");
             String password = request.getParameter("password");
             //Buscamos en la base de datos el usuario
-            User usuario= searchUser(user);
+            User usuario= authenticate(user,password);//Nos devuelve un usuario que tenga el mismo name y password
             if(usuario!=null) {//comprobamos si el usuario, existe, de no ser asi, se nos devuelve un user null
-              if(usuario.getPassword().equals(password)){//comprobamos si el usuario tiene la misma contraseña que la que han metido ellos
-                session.setAttribute("user",user);
+                session.setAttribute("user",usuario);
                 //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
                 response.sendRedirect("/home");
-              }//Tendriamos que poner un mensaje para decirle al usuario que no es la contraseña ideal
             }
             //habria que poner un mensaje para el usuario para decirle que no existe ese usuario
             //System.out.println("No existe ese usuario");
