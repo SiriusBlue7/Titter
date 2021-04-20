@@ -64,6 +64,31 @@ public class DBManager implements AutoCloseable {
     }
 
     /*
+     * Busca y devuelve un usuario buscnadolo por su nombre corto
+     *
+     */
+    public User searchUserId(int iduser) throws SQLException {
+      // crea la busqueda
+      String query = " SELECT * FROM Usuarios WHERE id=?";
+      // creamos el usuario para rellenarlo
+      User usuario = new User();
+      try ( PreparedStatement ps = con.prepareStatement(query)) {
+        ps.setString(1, iduser);
+        ResultSet rs = ps.executeQuery();
+        // si el resultado existe lo pasamos al usuario creado
+        if(rs != null){
+          usuario.setId(rs.getInt("id"));
+          usuario.setShort_name(rs.getString("short_name"));
+          usuario.setLong_name(rs.getString("long_name"));
+          usuario.setMail(rs.getString("mail"));
+          usuario.setPassword(rs.getString("password"));
+        }
+      }
+        return usuario;
+    }
+
+
+    /*
      * esta funcion comprueba si el nombre, el nombre corto y el email
      * estan libres en la base de datos
      * return:
@@ -100,7 +125,7 @@ public class DBManager implements AutoCloseable {
      */
     public void addUser(User usuario) throws SQLException{
 
-      String query = "INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES ('?', '?','?','?')";
+      String query = "INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES ('?', '?', '?', '?')";
 
       try ( PreparedStatement ps = con.prepareStatement(query)){
         ps.setString(1, usuario.getShort_name());
@@ -116,9 +141,9 @@ public class DBManager implements AutoCloseable {
      * devuelve un ArrayList con los mensajes relacionados con el id
      * del usuario
      */
-     //Necesaria revision y terminar
+     //Necesaria revision
     public List<Message> listMessages(int id) throws SQLException{
-      String query = "SELECT Mensajes.text AS mensajes , Mensajes.userId AS id , Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet ,  FROM Usuarios INNER JOIN  DESC ";
+      String query = "SELECT Mensajes.text AS mensajes , Mensajes.userId AS id , Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet , Mensajes. FROM Usuarios INNER JOIN Seguidos ON id=Seguidos.user INNER JOIN Mensajes ON Seguidos.seguido=Mensajes.userId DESC ";
 
 		  ArrayList<Message> buzon = new ArrayList<Message>();
 
