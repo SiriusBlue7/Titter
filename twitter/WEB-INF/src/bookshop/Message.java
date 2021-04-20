@@ -4,8 +4,8 @@ public class Message{
   private int id;
   private int userId;
   private String text;
-  private boolean respuesta;
-  private boolean retweet;
+  private int respuesta;
+  private int retweet;
   private String shortName;
   private String longName;
 
@@ -19,6 +19,14 @@ public class Message{
 
   public String getText(){
     return text;
+  }
+
+  public int getRespuesta(){
+    return respuesta;
+  }
+
+  public int getRetweet(){
+    return retweet;
   }
 
   public String getShortName(){
@@ -41,10 +49,17 @@ public class Message{
     this.text = text;
   }
 
+  public void setRespuesta(int respuesta){
+    this.respuesta = respuesta;
+  }
+
+  public void setRetweet(int retweet){
+    this.retweet = retweet;
+  }
+
   public void setShortName(String name){
     this.shortName = name;
   }
-
 
   public void setLongName(String name){
     this.longName = name;
