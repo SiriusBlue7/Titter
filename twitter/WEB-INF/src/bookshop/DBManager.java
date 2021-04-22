@@ -47,7 +47,7 @@ public class DBManager implements AutoCloseable {
       String query = " SELECT * FROM Usuarios WHERE short_name=?";
       // creamos el usuario para rellenarlo
       User usuario = new User();
-      try ( PreparedStatement ps = con.prepareStatement(query)) {
+      try ( PreparedStatement ps = connection.prepareStatement(query)) {
         ps.setString(1, short_name);
         ResultSet rs = ps.executeQuery();
         // si el resultado existe lo pasamos al usuario creado
@@ -66,7 +66,7 @@ public class DBManager implements AutoCloseable {
       String query = " SELECT * FROM Usuarios WHERE short_name=? AND password=?";
       // creamos el usuario para rellenarlo
       User usuario = new User();
-      try ( PreparedStatement ps = con.prepareStatement(query)) {
+      try ( PreparedStatement ps = connection.prepareStatement(query)) {
         ps.setString(1, short_name);
         ps.setString(2,password);
         ResultSet rs = ps.executeQuery();
@@ -94,12 +94,12 @@ public class DBManager implements AutoCloseable {
       String query_short = " SELECT short_name FROM Usuarios WHERE short_name=?";
       String query_name = " SELECT long_name FROM Usuarios WHERE long_name=?";
       String query_mail = " SELECT mail FROM Usuarios WHERE mail=?";
-      try ( PreparedStatement ps = con.prepareStatement(query_short);
-            PreparedStatement pn = con.prepareStatement(query_name);
-            PreparedStatement pm = con.prepareStatement(query_mail)) {
-        ps.setString(1, short_name);
+      try ( PreparedStatement ps = connection.prepareStatement(query_short);
+            PreparedStatement pn = connection.prepareStatement(query_name);
+            PreparedStatement pm = connection.prepareStatement(query_mail)) {
+        ps.setString(1, shortName);
         pn.setString(1, name);
-        pm.setString(1, mail);
+        pm.setString(1, email);
 
         ResultSet rs = ps.executeQuery();
         ResultSet rn = pn.executeQuery();
@@ -120,7 +120,7 @@ public class DBManager implements AutoCloseable {
 
       String query = "INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES ('?', '?','?','?')";
 
-      try ( PreparedStatement ps = con.prepareStatement(query)){
+      try ( PreparedStatement ps = connection.prepareStatement(query)){
         ps.setString(1, usuario.getShort_name());
         ps.setString(2, usuario.getLong_name());
         ps.setString(3, usuario.getMail());
@@ -135,7 +135,7 @@ public class DBManager implements AutoCloseable {
      * del usuario
      */
      //Necesaria revision y terminar
-    public List<Message> listMessages(int id) throws SQLException{
+    /*public List<Message> listMessages(int id) throws SQLException{
       String query = "SELECT Mensajes.text AS mensajes , Mensajes.userId AS id , Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet ,  FROM Usuarios INNER JOIN  DESC ";
 
 		  ArrayList<Message> buzon = new ArrayList<Message>();
@@ -145,23 +145,23 @@ public class DBManager implements AutoCloseable {
         while(rs.next()) {
 		    //Creamos el libro dentro del While para que no haya conflictos al introducirlo en el ArrayList
 		      Message mensaje = new Message();
-          mensaje.setId(null);
-          mensaje.setUserId(null);
+          //mensaje.setId(null);
+          //mensaje.setUserId(null);
           mensaje.setText(rs.getString("mensajes"));
           mensaje.setShortName(rs.getString("nick"));
           mensaje.setLongName(rs.getString("name"));
           mensaje.setDate(rs.getTimestamp("fecha"));
-			    buzon.add(libro);
+			    buzon.add(mensaje);
 
         }
       }
       return buzon;
-    }
+    }*/
 
   	public User searchUser(int id) throws SQLException{
         String query = "SELECT * FROM Usuarios WHERE id=?";
         User user;
-        try(PreparedStatement pst = connection.PreparedStatement(query)){
+        try(PreparedStatement pst = connection.prepareStatement(query)){
           pst.setInt(1, id);
           ResultSet rs = pst.executeQuery(query);
           user = new User();
