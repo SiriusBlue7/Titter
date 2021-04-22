@@ -17,22 +17,19 @@ import javax.servlet.http.HttpSession;
 
 
 @WebServlet("/home")
-public class Catalog extends HttpServlet {
+public class Home extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
         HttpSession session = request.getSession();
-        User user = (List<Book>) session.getAttribute("user");
-        if (cart == null) {
-            cart = new ArrayList<Book>();
-            session.setAttribute("cart", cart);
-        }
+        User user = session.getAttribute("user");
+
         try(DBManager db = new DBManager()){
   				// Obtiene el catálogo de libros desde la base de datos
-  				List<Message> messages = db.listMessages(user.getId());
-  				System.out.println("Catálogo: se han leído " + books.size() + " libros.");
-          request.setAttribute("messages", mesages);
-          RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/catalog.jsp");
+  				List<Message> messages = new List<Message>();//db.listMessages(user.getId());
+  				System.out.println("Home: se han leído " + messages.size() + " mensajes.");
+          request.setAttribute("messages", messages);
+          RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/home.jsp");
           rd.forward(request, response);
   				} catch (SQLException | NamingException e){
   					e.printStackTrace();

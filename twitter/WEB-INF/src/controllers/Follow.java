@@ -15,9 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/login")
-public class Login extends HttpServlet {
-  public void doPost(HttpServletRequest request, HttpServletResponse response)
+@WebServlet("/follow")
+public class Follow extends HttpServlet {
+  public void doGet(HttpServletRequest request, HttpServletResponse response)
           throws IOException, ServletException {
       // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
@@ -27,14 +27,16 @@ public class Login extends HttpServlet {
           try(DBManager db = new DBManager()){
             // Obtiene el catálogo de libros desde la base de datos
             //recogemos los valores que tiene el servidor del formulario
-            String new_user = request.getParameter("user");
+            String aux = request.getParameter("user");
             String password = request.getParameter("password");
             //Buscamos en la base de datos el usuario
-            user= db.authenticate(new_user,password);//Nos devuelve un usuario que tenga el mismo name y password
-            if(user!=null) {//comprobamos si el usuario, existe, de no ser asi, se nos devuelve un user null
-                session.setAttribute("user",user);
+            User usuario= db.searchUser(aux);
+            if(usuario!=null) {//comprobamos si el usuario, existe, de no ser asi, se nos devuelve un user null
+              if(usuario.getPassword().equals(password)){//comprobamos si el usuario tiene la misma contraseña que la que han metido ellos
+                session.setAttribute("user",usuario);
                 //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
                 response.sendRedirect("/home");
+              }//Tendriamos que poner un mensaje para decirle al usuario que no es la contraseña ideal
             }
             //habria que poner un mensaje para el usuario para decirle que no existe ese usuario
             //System.out.println("No existe ese usuario");

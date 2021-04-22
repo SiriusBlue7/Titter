@@ -1,5 +1,5 @@
 package controllers;
-import bookshop.*;//Esto accede a la libreria que hemos creado nosotros en BookShop y podamos acceder a llamarlo
+import twitter.*;//Esto accede a la libreria que hemos creado nosotros en BookShop y podamos acceder a llamarlo
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,26 +16,21 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
-
-
 @WebServlet("/register")
-public class Catalog extends HttpServlet {
-    public void doGet(HttpServletRequest request, HttpServletResponse response)
+public class Register extends HttpServlet {
+    public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
         HttpSession session = request.getSession();
-        List<Book> cart = (List<Book>) session.getAttribute("cart");
-        if (cart == null) {
 
-            try(DBManager db = new DBManager()){
       				// Obtiene el catálogo de libros desde la base de datos
               String short_name = request.getParameter("short_name");
               String long_name = request.getParameter("long_name");
               String mail = request.getParameter("mail");
-              String password = request.getParameter("password")
+              String password = request.getParameter("password1");
 
       				int resultado = db.isDataFree(short_name, long_name,mail);
-
+              /*try(DBManager db = new DBManager()){
         				if (resulatdo == 0) {
                   //creamos el usuario que vamos a guardar en la
                   User new_user= new User();
@@ -53,7 +48,6 @@ public class Catalog extends HttpServlet {
       			} catch (SQLException | NamingException e){
       					e.printStackTrace();
       					response.sendError(500);
-      			}
-        }
+      			}*/
     }
 }
