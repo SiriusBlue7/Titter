@@ -1,6 +1,6 @@
 <Context reloadable="true">
     <Resource
-        name="jdbc/Application"
+        name="jdbc/twitter"
         auth="Container"
         type="javax.sql.DataSource"
         username="21_comweb_11"
