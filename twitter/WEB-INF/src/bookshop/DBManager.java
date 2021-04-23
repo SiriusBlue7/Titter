@@ -27,7 +27,7 @@ public class DBManager implements AutoCloseable {
    	private void connect() throws SQLException, NamingException {
     	Context initCtx = new InitialContext();
     	Context envCtx = (Context) initCtx.lookup("java:comp/env");
-    	DataSource ds = (DataSource) envCtx.lookup("jdbc/BookShop");
+    	DataSource ds = (DataSource) envCtx.lookup("jdbc/twitter");
     	connection = ds.getConnection();
 	}
 
@@ -51,7 +51,7 @@ public class DBManager implements AutoCloseable {
         ps.setString(1, short_name);
         ResultSet rs = ps.executeQuery();
         // si el resultado existe lo pasamos al usuario creado
-        if(rs != null){
+        if(rs.next()){
           usuario.setId(rs.getInt("id"));
           usuario.setShort_name(rs.getString("short_name"));
           usuario.setLong_name(rs.getString("long_name"));
@@ -65,13 +65,14 @@ public class DBManager implements AutoCloseable {
       // crea la busqueda
       String query = " SELECT * FROM Usuarios WHERE short_name=? AND password=?";
       // creamos el usuario para rellenarlo
-      User usuario = new User();
+      User usuario = null;
       try ( PreparedStatement ps = connection.prepareStatement(query)) {
         ps.setString(1, short_name);
         ps.setString(2,password);
         ResultSet rs = ps.executeQuery();
         // si el resultado existe lo pasamos al usuario creado
-        if(rs != null){
+        if(rs.next()){
+          usuario = new User();
           usuario.setId(rs.getInt("id"));
           usuario.setShort_name(rs.getString("short_name"));
           usuario.setLong_name(rs.getString("long_name"));
@@ -105,9 +106,9 @@ public class DBManager implements AutoCloseable {
         ResultSet rn = pn.executeQuery();
         ResultSet rm = pm.executeQuery();
 
-        if(rs != null) return 1;
-        if(rn != null) return 2;
-        if(rm != null) return 3;
+        if(rs.next()) return 1;
+        if(rn.next()) return 2;
+        if(rm.next()) return 3;
         return 0;
       }
     }
