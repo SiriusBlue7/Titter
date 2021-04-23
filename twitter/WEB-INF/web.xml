@@ -11,7 +11,7 @@
             configurartion for the web application.
         </description>
         <res-ref-name>
-            jdbc/Application
+            jdbc/twitter
         </res-ref-name>
         <res-type>
           javax.sql.DataSource
