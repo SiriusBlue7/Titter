@@ -21,7 +21,7 @@ public class Login extends HttpServlet {
           throws IOException, ServletException {
       // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
-      User user = session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
+      User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
       if (user == null) {//comprobamos si en la sesion ya hay algun usuario almacenado
 
           try(DBManager db = new DBManager()){
@@ -30,12 +30,15 @@ public class Login extends HttpServlet {
             String new_user = request.getParameter("user");
             String password = request.getParameter("password");
             //Buscamos en la base de datos el usuario
-            user= db.authenticate(new_user,password);//Nos devuelve un usuario que tenga el mismo name y password
+            user = db.authenticate(new_user,password);//Nos devuelve un usuario que tenga el mismo name y password
             if(user!=null) {//comprobamos si el usuario, existe, de no ser asi, se nos devuelve un user null
                 session.setAttribute("user",user);
                 //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
-                response.sendRedirect("/home");
+                response.sendRedirect("home");
+            }else{
+              response.sendRedirect("iniciosesion.html?error=1");
             }
+
             //habria que poner un mensaje para el usuario para decirle que no existe ese usuario
             //System.out.println("No existe ese usuario");
           }catch (SQLException | NamingException e){
