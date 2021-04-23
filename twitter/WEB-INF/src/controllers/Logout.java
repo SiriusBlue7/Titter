@@ -22,7 +22,7 @@ public class Logout extends HttpServlet {
         // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
         HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
         session.invalidate();
-        response.sendRedirect("/iniciosesion.html");
+        response.sendRedirect("iniciosesion.html");
         //Aqui si ya existe el usuario, tendriamos que mostrar un mensaje por pantalla, o redirigir a otra página de error
         //session.sendRedirect("/error");
     }
