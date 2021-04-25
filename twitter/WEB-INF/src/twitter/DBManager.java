@@ -119,7 +119,7 @@ public class DBManager implements AutoCloseable {
      */
     public void addUser(User usuario) throws SQLException{
 
-      String query = "INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES ('?', '?','?','?')";
+      String query = "INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES (? , ? , ? , ?)";
 
       try ( PreparedStatement ps = connection.prepareStatement(query)){
         ps.setString(1, usuario.getShort_name());
@@ -127,7 +127,7 @@ public class DBManager implements AutoCloseable {
         ps.setString(3, usuario.getMail());
         ps.setString(4, usuario.getPassword());
 
-        ResultSet rs = ps.executeQuery();
+        ps.executeUpdate();
       }
     }
 
@@ -174,5 +174,19 @@ public class DBManager implements AutoCloseable {
         }
       return user;
   	}
+
+    public void addMessage(Message mensaje) throws SQLException{
+      String query = "INSERT INTO Mensajes (userId , respuesta , retweet , text , fecha) VALUES (? , ? , ? , ? , ?)";
+
+      try ( PreparedStatement ps = connection.prepareStatement(query)){
+        ps.setString(1, mensaje.getUserId());
+        ps.setString(2, mensaje.getRespuesta());
+        ps.setString(3, mensaje.getRetweet());
+        ps.setString(4, mensaje.getText()));
+        ps.setDate(5, mensaje.getDate());
+
+        ps.executeUpdate();
+      }
+    }
 
 }
