@@ -26,5 +26,5 @@ CREATE TABLE Seguidos(
 	user INT NOT NULL,
 	seguido INT NOT NULL,
 	CONSTRAINT FOREIGN KEY (user) REFERENCES Usuarios(id),
-	CONSTRAINT FOREIGN KEY (seguido) REFERENCES Usuarios(id),
+	CONSTRAINT FOREIGN KEY (seguido) REFERENCES Usuarios(id)
 );
