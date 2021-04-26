@@ -1,26 +1,30 @@
-CREATE TABLE Usuarios{
-	id INT NOT NULL autoincrement,
+CREATE TABLE Usuarios(
+	id INT NOT NULL auto_increment,
 	short_name VARCHAR(10) NOT NULL,
 	long_name VARCHAR(30) NOT NULL,
 	mail VARCHAR(40) NOT NULL,
 	password VARCHAR(10) NOT NULL,
 	PRIMARY KEY(id)
-};
+);
 
-CREATE TABLE Mensajes{
-	id INT NOT NULL autoincrement,
+INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES ('user1', 'user1','user1gmail.com','user1');
+
+CREATE TABLE Mensajes(
+	id INT NOT NULL auto_increment,
 	userId INT NOT NULL,
 	respuesta INT,
 	retweet INT,
-	text VARCHAR(280)  NULL,
+	text VARCHAR(280) NULL,
+	fecha DATETIME NOT NULL,
+	PRIMARY KEY(id),
 	CONSTRAINT FOREIGN KEY (userId) REFERENCES Usuarios(id),
 	CONSTRAINT FOREIGN KEY (respuesta) REFERENCES Mensajes(id),
 	CONSTRAINT FOREIGN KEY (retweet) REFERENCES Mensajes(id)
-};
+);
 
-CREATE TABLE Seguidos{
+CREATE TABLE Seguidos(
 	user INT NOT NULL,
 	seguido INT NOT NULL,
-	CONSTRAINT FOREING KEY(user) REFERENCES Usuarios(id),
-	CONSTRAINT FOREIGN KEY(seguido) REFERENCES Usuarios(id)
-};
+	CONSTRAINT FOREIGN KEY (user) REFERENCES Usuarios(id),
+	CONSTRAINT FOREIGN KEY (seguido) REFERENCES Usuarios(id),
+);
