@@ -38,6 +38,7 @@ public class Newmessage extends HttpServlet {
                 //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
               //  response.sendRedirect("/home");
               //como no estamos cambianndo de página, creo que no hace falta q
+              response.sendRedirect("home");
           }catch (SQLException | NamingException e){
   					e.printStackTrace();
   					response.sendError(500);

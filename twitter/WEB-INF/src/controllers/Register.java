@@ -28,26 +28,27 @@ public class Register extends HttpServlet {
               String long_name = request.getParameter("long_name");
               String mail = request.getParameter("mail");
               String password = request.getParameter("password1");
+              String password2 = request.getParameter("password2");
+              try(DBManager db = new DBManager()){
+        				int resultado = db.isDataFree(short_name, long_name,mail);
 
-      				int resultado = db.isDataFree(short_name, long_name,mail);
-              /*try(DBManager db = new DBManager()){
-        				if (resulatdo == 0) {
-                  //creamos el usuario que vamos a guardar en la
-                  User new_user= new User();
-                  new_user.setShort_name(short_name);
-                  new_user.setLong_name(long_name);
-                  new_user.setMail(mail);
-                  new_user.setPassword(password);
+          				if (resultado == 0) {
+                    //creamos el usuario que vamos a guardar en la
+                    User new_user= new User();
+                    new_user.setShort_name(short_name);
+                    new_user.setLong_name(long_name);
+                    new_user.setMail(mail);
+                    new_user.setPassword(password);
 
-                  db.addUser(new_user);//Guardamos el nuevo usuario en la BD
+                    db.addUser(new_user);//Guardamos el nuevo usuario en la BD
 
-                  session.setAttribute("user", new_user);//Automaticamente iniciamos sesion en la aplicacion
-                  //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
-                  response.sendRedirect("/home");
-                }
-      			} catch (SQLException | NamingException e){
+                    session.setAttribute("user", new_user);//Automaticamente iniciamos sesion en la aplicacion
+                    //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
+                    response.sendRedirect("home");
+                  }
+      			   } catch (SQLException | NamingException e){
       					e.printStackTrace();
       					response.sendError(500);
-      			}*/
+      			}
     }
 }

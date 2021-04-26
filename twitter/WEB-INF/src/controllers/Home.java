@@ -22,13 +22,13 @@ public class Home extends HttpServlet {
             throws IOException, ServletException {
         // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
         HttpSession session = request.getSession();
-        User user = session.getAttribute("user");
+        User user = (User) session.getAttribute("user");
 
         try(DBManager db = new DBManager()){
   				// Obtiene el catálogo de libros desde la base de datos
-  				List<Message> messages = new List<Message>();//db.listMessages(user.getId());
-  				System.out.println("Home: se han leído " + messages.size() + " mensajes.");
-          request.setAttribute("messages", messages);
+  				//List<Message> messages = new List<Message>();//db.listMessages(user.getId());
+  			//System.out.println("Home: se han leído " + messages.size() + " mensajes.");
+          //request.setAttribute("messages", messages);
           RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/home.jsp");
           rd.forward(request, response);
   				} catch (SQLException | NamingException e){

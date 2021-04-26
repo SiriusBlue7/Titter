@@ -45,6 +45,8 @@ public class Login extends HttpServlet {
   					e.printStackTrace();
   					response.sendError(500);
   				}
+      }else{
+        response.sendRedirect("home");
       }
       //Aqui si ya existe el usuario, tendriamos que mostrar un mensaje por pantalla, o redirigir a otra página de error
       //session.sendRedirect("/error");

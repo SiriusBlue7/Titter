@@ -21,7 +21,7 @@ public class Follow extends HttpServlet {
           throws IOException, ServletException {
       // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
-      User user = session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
+      User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
       if (user == null) {//comprobamos si en la sesion ya hay algun usuario almacenado
 
           try(DBManager db = new DBManager()){
