@@ -9,7 +9,7 @@ public class Message{
   private int retweet;
   private String shortName;
   private String longName;
-  private Date fecha;
+  private java.util.Date fecha;
 
 
   public int getId(){
@@ -40,7 +40,7 @@ public class Message{
     return longName;
   }
 
-  public Date getDate(){
+  public java.util.Date getDate(){
     return fecha;
   }
 
@@ -71,7 +71,7 @@ public class Message{
     this.longName = name;
   }
 
-  public void setDate(Date fecha){
+  public void setDate(java.util.Date fecha){
     this.fecha = fecha;
   }
 

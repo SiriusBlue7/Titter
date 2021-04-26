@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Date;
+import java.sql.Timestamp;
 
 import javax.sql.DataSource;
 import javax.naming.NamingException;
@@ -61,6 +62,8 @@ public class DBManager implements AutoCloseable {
       }
         return usuario;
     }
+
+    //
     public User authenticate(String short_name, String password) throws SQLException {
       // crea la busqueda
       String query = " SELECT * FROM Usuarios WHERE short_name=? AND password=?";
@@ -82,6 +85,7 @@ public class DBManager implements AutoCloseable {
       }
         return usuario;
     }
+
     /*
      * esta funcion comprueba si el nombre, el nombre corto y el email
      * estan libres en la base de datos
@@ -119,7 +123,7 @@ public class DBManager implements AutoCloseable {
      */
     public void addUser(User usuario) throws SQLException{
 
-      String query = "INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES (? , ? , ? , ?)";
+      String query = "INSERT INTO Usuarios (short_name, long_name, mail, password) VALUES (?, ?,?,?)";
 
       try ( PreparedStatement ps = connection.prepareStatement(query)){
         ps.setString(1, usuario.getShort_name());
@@ -127,7 +131,7 @@ public class DBManager implements AutoCloseable {
         ps.setString(3, usuario.getMail());
         ps.setString(4, usuario.getPassword());
 
-        ps.executeUpdate();
+        int rowcount = ps.executeUpdate();
       }
     }
 
@@ -153,7 +157,6 @@ public class DBManager implements AutoCloseable {
           mensaje.setLongName(rs.getString("name"));
           mensaje.setDate(rs.getTimestamp("fecha"));
 			    buzon.add(mensaje);
-
         }
       }
       return buzon;
@@ -176,14 +179,13 @@ public class DBManager implements AutoCloseable {
   	}
 
     public void addMessage(Message mensaje) throws SQLException{
-      String query = "INSERT INTO Mensajes (userId , respuesta , retweet , text , fecha) VALUES (? , ? , ? , ? , ?)";
+      String query = "INSERT INTO Mensajes (userId  , text , fecha) VALUES (? , ? , ?)";
 
       try ( PreparedStatement ps = connection.prepareStatement(query)){
-        ps.setString(1, mensaje.getUserId());
-        ps.setString(2, mensaje.getRespuesta());
-        ps.setString(3, mensaje.getRetweet());
-        ps.setString(4, mensaje.getText()));
-        ps.setDate(5, mensaje.getDate());
+        ps.setInt(1, mensaje.getUserId());
+        ps.setString(2, mensaje.getText());
+        java.sql.Date sqlDate = new java.sql.Date(mensaje.getDate().getTime());
+        ps.setDate(3,sqlDate);
 
         ps.executeUpdate();
       }
