@@ -17,27 +17,24 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 @WebServlet("/newmessage")
-public class Follow extends HttpServlet {
+public class Newmessage extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
           throws IOException, ServletException {
       // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
       User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
-      String texto = session.getAttribute("text");
-
+      String texto = (String) session.getAttribute("text");
+      java.util.Date utilDate = new java.util.Date();
       Message mensaje = new Message();
        mensaje.setUserId(user.getId());
-       mensaje.setRespuesta(null);
-       mensaje.setRetweet(null);
        mensaje.setText(texto);
-       mensaje.setDate(date.getTimestamp());
+       mensaje.setDate(utilDate);
 
           try(DBManager db = new DBManager()){
             // Obtiene el catálogo de libros desde la base de datos
             //recogemos los valores que tiene el servidor del formulario
             db.addMessage(mensaje);
             //Buscamos en la base de datos el usuario
-                session.setAttribute("user",usuario);
                 //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
               //  response.sendRedirect("/home");
               //como no estamos cambianndo de página, creo que no hace falta q
