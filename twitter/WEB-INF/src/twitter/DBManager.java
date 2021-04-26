@@ -184,8 +184,10 @@ public class DBManager implements AutoCloseable {
       try ( PreparedStatement ps = connection.prepareStatement(query)){
         ps.setInt(1, mensaje.getUserId());
         ps.setString(2, mensaje.getText());
-        java.sql.Date sqlDate = new java.sql.Date(mensaje.getDate().getTime());
-        ps.setDate(3,sqlDate);
+        //Cogemos la hora en el servidor
+        Date date = new Date();
+        Timestamp ts=new Timestamp(date.getTime());//Cambiamos el tipo de la hora para poder añadirlo con Timestamp
+        ps.setTimestamp(3,ts);
 
         ps.executeUpdate();
       }

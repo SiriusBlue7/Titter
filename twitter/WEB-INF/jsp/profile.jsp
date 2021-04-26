@@ -1,4 +1,3 @@
-
 <%@ page language='java' contentType='text/html;charset=utf-8'%>
 <%@ page import='twitter.*' %>
 <%@ page import='java.util.List' %>
@@ -6,7 +5,7 @@
 <!DOCTYPE html>
 <html>
    <head>
-       <title>Home</title>
+       <title></title>
    </head>
    <body>
        <h1>Inicio</h1>
@@ -25,4 +24,3 @@
        </form>
 
    </body>
-</html>

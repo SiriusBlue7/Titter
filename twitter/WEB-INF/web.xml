@@ -1,7 +1,7 @@
 <web-app>
     <display-name>Clon de twitter</display-name>
     <description>
-        Practica final de Computacin Web 
+        Practica final de Computacin Web
     </description>
     <resource-ref>
         <description>

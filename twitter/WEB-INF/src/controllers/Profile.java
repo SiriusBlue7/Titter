@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
-@WebServlet("/home")
+@WebServlet("/profile")
 public class Home extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
@@ -29,7 +29,7 @@ public class Home extends HttpServlet {
     				//List<Message> messages = new List<Message>();//db.listMessages(user.getId());
     			  //System.out.println("Home: se han leído " + messages.size() + " mensajes.");
             //request.setAttribute("messages", messages);
-            RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/home.jsp");
+            RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/profile.jsp");
             rd.forward(request, response);
     				} catch (SQLException | NamingException e){
     					e.printStackTrace();
