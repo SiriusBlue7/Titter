@@ -1,0 +1,18 @@
+---------------------------Para entrar en las carpetas importantes------------
+cd Escritorio/Proyecto/apache-tomcat-9.0.44/bin/
+
+cd Escritorio/Proyecto/apache-tomcat-9.0.44/webapps/twitter/WEB-INF/src/
+
+
+------------------------Comandos de compilacion-----------------------------
+javac -d ../classes -cp ../classes:../../../../lib/servlet-api.jar */*.java
+
+------------------------comandos apache-------------------------------------
+./startup.sh
+
+./shutdown.sh && ./startup.sh
+
+./shutdown.sh
+
+-----------------------omprobacion de errores----------------------------
+less ../logs/catalina.out
