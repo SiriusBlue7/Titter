@@ -139,9 +139,13 @@ public class DBManager implements AutoCloseable {
         String query = "SELECT * FROM Usuarios WHERE id=?";
         User user;
         try(PreparedStatement pst = connection.prepareStatement(query)){
+
           pst.setInt(1, id);
-          ResultSet rs = pst.executeQuery(query);
+
+          ResultSet rs = pst.executeQuery();
+
           user = new User();
+
           user.setId(id);
           user.setShort_name(rs.getString("short_name"));
           user.setLong_name(rs.getString("long_name"));
@@ -157,23 +161,28 @@ public class DBManager implements AutoCloseable {
      */
      //Necesaria revision y terminar
     public List<Message> listMessages(int id) throws SQLException{
-      String query_mensajes = "SELECT Mensajes.text AS mensajes , Mensajes.userId AS iduser , Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet , Mensajes.fecha AS fecha FROM Usuarios INNER JOIN Seguidos ON Usuarios.id = Seguidos.seguido INNER JOIN Mensajes ON Usuarios.id = Mensajes.userId WHERE Seguidos.user = "+id+" ORDER BY Mensajes.fecha DESC;";
+      String query = "SELECT Mensajes.id AS idmensajes , Mensajes.text AS mensajes , Mensajes.userId AS iduser ,  Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet , Mensajes.fecha AS fecha FROM Usuarios INNER JOIN Seguidos ON Usuarios.id = Seguidos.seguido INNER JOIN Mensajes ON Usuarios.id = Mensajes.userId WHERE Seguidos.user = ? ORDER BY Mensajes.fecha DESC";
 
 		  ArrayList<Message> buzon = new ArrayList<Message>();
 
-      try(Statement stmt = connection.createStatement()) {
-        ResultSet rs = stmt.executeQuery(query);
+      try(PreparedStatement stmt = connection.prepareStatement(query)) {
+
+        stmt.setInt(1, id);
+
+        ResultSet rs = stmt.executeQuery();
         while(rs.next()) {
 
 		      Message mensaje = new Message();
 
+          mensaje.setId(rs.getInt("idmensajes"));
           mensaje.setText(rs.getString("mensajes"));
           mensaje.setDate(rs.getTimestamp("fecha"));
           mensaje.setRetweet(rs.getInt("retweet"));
-          mensajes.setRespuesta(rs.getInt("respuesta"));
-          User usuario = searchUser(rs.getInt("iduser"));
-          mensaje.setShortName(usuario.getShortName());
-          mensaje.setLongName(usuario.getLongName());
+          mensaje.setRespuesta(rs.getInt("respuesta"));
+          int user_id = rs.getInt("iduser");
+          User usuario = searchUser(user_id);
+          mensaje.setShortName(usuario.getShort_name());
+          mensaje.setLongName(usuario.getLong_name());
 
 			    buzon.add(mensaje);
         }
