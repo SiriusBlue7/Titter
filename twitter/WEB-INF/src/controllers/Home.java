@@ -20,15 +20,13 @@ import javax.servlet.http.HttpSession;
 public class Home extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
-        // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
         if (user != null) {
           try(DBManager db = new DBManager()){
-    				// Obtiene el catálogo de libros desde la base de datos
-    				//List<Message> messages = new List<Message>();//db.listMessages(user.getId());
-    			  //System.out.println("Home: se han leído " + messages.size() + " mensajes.");
-            //request.setAttribute("messages", messages);
+    				List<Message> messages = db.listMessages(user.getId());
+            request.setAttribute("messages", messages);
+
             RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/home.jsp");
             rd.forward(request, response);
     				} catch (SQLException | NamingException e){
