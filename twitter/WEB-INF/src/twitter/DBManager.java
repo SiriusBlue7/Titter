@@ -135,34 +135,7 @@ public class DBManager implements AutoCloseable {
       }
     }
 
-    /*
-     * devuelve un ArrayList con los mensajes relacionados con el id
-     * del usuario
-     */
-     //Necesaria revision y terminar
-    /*public List<Message> listMessages(int id) throws SQLException{
-      String query = "SELECT Mensajes.text AS mensajes , Mensajes.userId AS id , Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet ,  FROM Usuarios INNER JOIN  DESC ";
-
-		  ArrayList<Message> buzon = new ArrayList<Message>();
-
-      try(Statement stmt = connection.createStatement()) {
-        ResultSet rs = stmt.executeQuery(query);
-        while(rs.next()) {
-		    //Creamos el libro dentro del While para que no haya conflictos al introducirlo en el ArrayList
-		      Message mensaje = new Message();
-          //mensaje.setId(null);
-          //mensaje.setUserId(null);
-          mensaje.setText(rs.getString("mensajes"));
-          mensaje.setShortName(rs.getString("nick"));
-          mensaje.setLongName(rs.getString("name"));
-          mensaje.setDate(rs.getTimestamp("fecha"));
-			    buzon.add(mensaje);
-        }
-      }
-      return buzon;
-    }*/
-
-  	public User searchUser(int id) throws SQLException{
+    public User searchUser(int id) throws SQLException{
         String query = "SELECT * FROM Usuarios WHERE id=?";
         User user;
         try(PreparedStatement pst = connection.prepareStatement(query)){
@@ -177,6 +150,36 @@ public class DBManager implements AutoCloseable {
         }
       return user;
   	}
+
+    /*
+     * devuelve un ArrayList con los mensajes relacionados con el id
+     * del usuario
+     */
+     //Necesaria revision y terminar
+    public List<Message> listMessages(int id) throws SQLException{
+      String query_mensajes = "SELECT Mensajes.text AS mensajes , Mensajes.userId AS iduser , Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet , Mensajes.fecha AS fecha FROM Usuarios INNER JOIN Seguidos ON Usuarios.id = Seguidos.seguido INNER JOIN Mensajes ON Usuarios.id = Mensajes.userId WHERE Seguidos.user = "+id+" ORDER BY Mensajes.fecha DESC;";
+
+		  ArrayList<Message> buzon = new ArrayList<Message>();
+
+      try(Statement stmt = connection.createStatement()) {
+        ResultSet rs = stmt.executeQuery(query);
+        while(rs.next()) {
+
+		      Message mensaje = new Message();
+
+          mensaje.setText(rs.getString("mensajes"));
+          mensaje.setDate(rs.getTimestamp("fecha"));
+          mensaje.setRetweet(rs.getInt("retweet"));
+          mensajes.setRespuesta(rs.getInt("respuesta"));
+          User usuario = searchUser(rs.getInt("iduser"));
+          mensaje.setShortName(usuario.getShortName());
+          mensaje.setLongName(usuario.getLongName());
+
+			    buzon.add(mensaje);
+        }
+      }
+      return buzon;
+    }
 
     public void addMessage(Message mensaje) throws SQLException{
       String query = "INSERT INTO Mensajes (userId  , text , fecha) VALUES (? , ? , ?)";
