@@ -1,0 +1,12 @@
+<Context reloadable="true">
+    <Resource
+        name="jdbc/twitter"
+        auth="Container"
+        type="javax.sql.DataSource"
+        username="21_comweb_11"
+        password="1LU0KI1i"
+        driverClassName="com.mysql.jdbc.Driver"
+        url="jdbc:mysql://mysql.lab.it.uc3m.es/21_comweb_11d"
+        maxActive="8"
+        maxIdle="4"/>
+</Context>
