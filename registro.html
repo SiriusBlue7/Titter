@@ -11,24 +11,40 @@
     <body>
       <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 
-      <h1 class="display-5 fw-bold lh-1 mb-3">Registro de usuario</h1>
-      <form action = "register" method="post">
-        <label>
-          <p>Nombre de usuario <input type="text" name="long_name"></p>
-        </label>
-        <label>
-          <p>Apodo <input type="text" name="short_name"></p>
-        </label>
-        <label>
-          <p>Contraseña <input type="password" name="password1"></p>
-        </label>
-        <label>
-          <p>Repita contraseña <input type="password" name="password2"></p>
-        </label>
-        <label>
-          <p>Email <input type="text" name="mail"></p>
-        </label>
-        <input type="submit" value="register">
-      </form>
+      <div class="container col-xl-10 px-4 py-5">
+        <div class="col-10 mx-auto col-lg-5">
+          <h1 class="display-5 fw-bold lh-1 mb-3">Registro de usuario</h1>
+          <form class="p-5 border rounded-3 bg-light" action = "register" method="post">
+
+            <div class="mb-3">
+              <label for="floatingname" class="form-label">Nombre de usuario </label>
+              <input type="text" class="form-control" id="floatingname" name="long_name">
+            </div>
+
+            <div class="mb-3">
+              <label for="floatingnick" class="form-label">Apodo</label>
+              <input type="text" class="form-control" id="floatingnick" name="short_name">
+            </div>
+
+            <div class="mb-3">
+              <label for="floatingpass" class="form-label">Contraseña </label>
+              <input type="password" class="form-control" id="floatingpass" name="password1">
+            </div>
+
+            <div class="mb-3">
+              <label for="floatingpass2" class="form-label">Repita contraseña </label>
+              <input type="password" class="form-control" id="floatingpass2" name="password2">
+            </div>
+
+            <div class="mb-3">
+              <label for="floatingmail" class="form-label">Email </label>
+              <input type="text" class="form-control" id="floatingmail" name="mail">
+            </div>
+
+            <input class="btn btn-primary" type="submit" value="register">
+
+          </form>
+        </div>
+      </div>
     </body>
 </html>
