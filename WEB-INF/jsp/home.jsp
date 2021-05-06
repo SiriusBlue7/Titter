@@ -19,7 +19,7 @@
 
      <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
        <div class="container-fluid">
-         <a class="navbar-brand">¡Bienvenido de nuevo <% =request.getAttribute("user"); %>!</a>
+         <a class="navbar-brand">¡Bienvenido de nuevo <%= request.getAttribute("user"); %>!</a>
        </div>
        <form action = logout>
          <input class="btn btn-primary" type="submit" value="cerrar sesion">
