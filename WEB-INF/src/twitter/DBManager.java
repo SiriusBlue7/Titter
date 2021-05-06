@@ -206,4 +206,34 @@ public class DBManager implements AutoCloseable {
       }
     }
 
+    public List<Message> listUserMessage(int id) throws SQLException{
+      String query = "SELECT Mensajes.id AS idmensaje , Mensajes.text AS mensajes , Mensajes.userId AS iduser ,  Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet , Mensajes.fecha AS fecha FROM Usuarios INNER JOIN Mensajes ON Usuarios.id = Mensajes.userId WHERE Usuarios.id = ? ORDER BY Mensajes.fecha DESC";
+
+      ArrayList<Message> buzon = new ArrayList<Message>();
+
+      try(PreparedStatement stmt = connection.prepareStatement(query)) {
+
+        stmt.setInt(1, id);
+
+        ResultSet rs = stmt.executeQuery();
+        while(rs.next()) {
+
+		      Message mensaje = new Message();
+
+          mensaje.setId(rs.getInt("idmensaje"));
+          mensaje.setText(rs.getString("mensajes"));
+          mensaje.setDate(rs.getTimestamp("fecha"));
+          mensaje.setRetweet(rs.getInt("retweet"));
+          mensaje.setRespuesta(rs.getInt("respuesta"));
+          int user_id = rs.getInt("iduser");
+          User usuario = searchUser(user_id);
+          mensaje.setShortName(usuario.getShort_name());
+          mensaje.setLongName(usuario.getLong_name());
+
+			    buzon.add(mensaje);
+        }
+      }
+      return buzon;
+    }
+
 }
