@@ -26,26 +26,15 @@
        </form>
      </nav>
 
-     <div class="d-flex align-items-center p-3 my-3 rounded shadow-sm">
-       <div class="lh-1">
-         <h1 class="h6 mb-0 lh-1">¿Que esta pasando?</h1>
-       </div>
-       <form action="newmessage">
-         <div>
-           <textarea name="text" rows="5" cols="80" maxlength="280" placeholder="texto aqui..."></textarea>
+     <div class="container col-xl-10 px-4 py-5">
+       <form class="p-5 border rounded-3 bg-light" action="newmessage">
+         <div class="mb-3">
+           <label for="floatingtitle" class="form-label">¿Que esta pasando? </label>
+           <textarea class="form-control" name="text" rows="4" cols="70" maxlength="280" id="floatingtitle" placeholder="compartelo..."></textarea>
          </div>
          <input class="btn btn-primary" type="submit" value="twittear">
        </form>
      </div>
-
-     <form action="newmessage">
-       <div>
-         <label>
-           <textarea name="text" rows="5" cols="80" maxlength="280" placeholder="¿Que estas pensando?"></textarea>
-         </label>
-       </div>
-       <input type="submit" value="twittear">
-     </form>
 
      <% List<Message> lista = (List<Message>) request.getAttribute("messages"); %>
      <% for (Message mensaje: lista) { %>
