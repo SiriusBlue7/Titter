@@ -30,7 +30,7 @@ public class Follow extends HttpServlet {
             int id_user = user.getId();
             int id_profile = request.getParameter("id");
 
-                db.follow(user, id);//comprobamos si el usuario tiene la misma contraseña que la que han metido ellos
+                db.unfollow(user, id);//comprobamos si el usuario tiene la misma contraseña que la que han metido ellos
             }
             //habria que poner un mensaje para el usuario para decirle que no existe ese usuario
             //System.out.println("No existe ese usuario");
