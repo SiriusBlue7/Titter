@@ -37,7 +37,7 @@
      </div>
 
      <div class="my-3 p-3 bg-body rounded shadow-sm">
-       <h6 class="border-bottom pb-2 mb-0">Recent updates</h6>
+       <h6 class="border-bottom pb-2 mb-0">Ultimos mensajes</h6>
        <% List<Message> lista = (List<Message>) request.getAttribute("messages"); %>
        <% for (Message mensaje: lista) { %>
 
