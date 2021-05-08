@@ -26,19 +26,20 @@ public class Profile extends HttpServlet {
         // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
-        if (user != null) {
-          try(DBManager db = new DBManager()){
 
-            List<Message> list = db.listUserMessage();
-            request.setAttribute("messages", messages);
+          try(DBManager db = new DBManager()){
+            User profile_user = db.searchUser(request.getParameter("id"));
+            List<Message> messagesUser = db.listUserMessage(profile_user.getId());
+
+            request.setAttribute("profile_user",profile_user);
+            request.setAttribute("messagesUser", messagesUser);
+            
             RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/profile.jsp");
             rd.forward(request, response);
     			} catch (SQLException | NamingException e){
     					e.printStackTrace();
     					response.sendError(500);
     			}
-        }else{
-          response.sendRedirect("iniciosesion.html");
-        }
+
     }
 }
