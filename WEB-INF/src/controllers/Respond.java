@@ -4,6 +4,7 @@ import twitter.*;//Esto accede a la libreria que hemos creado nosotros en BookSh
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Date;
 import java.sql.SQLException;
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;//para evitar que el RequestDispatcher no de error
@@ -15,28 +16,32 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-@WebServlet("/unfollow")
-public class Unfollow extends HttpServlet {
+@WebServlet("/respond")
+public class Respond extends HttpServlet {
   public void doGet(HttpServletRequest request, HttpServletResponse response)
           throws IOException, ServletException {
+
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
       User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
-      if (user != null) {//comprobamos si en la sesion ya hay algun usuario almacenado
+      //cogemos los elementos del texto que hemos escrito y el id del mensaje para crear el objeto y enviarlo en la funcion
+      String texto = request.getParameter("text");
+      int id_mensaje = Integer.parseInt(request.getParameter("id_mensaje"));
+      //cogemos la hora para crear el mensaje del usuario
+      java.util.Date utilDate = new java.util.Date();
+      Message mensaje = new Message();
+       mensaje.setUserId(user.getId());
+       mensaje.setText(texto);
+       mensaje.setDate(utilDate);
 
           try(DBManager db = new DBManager()){
-            // Obtiene el catálogo de libros desde la base de datos
-            //recogemos los valores que tiene el servidor del formulario
-            int id_user = user.getId();
-            int id_profile = Integer.parseInt(request.getParameter("id"));
+            //llamamos a la funcion para que guarde el mensaje en la base de datos
+            db.respond(mensaje,id_mensaje);
 
-                db.unfollow(id_user, id_profile);//comprobamos si el usuario tiene la misma contraseña que la que han metido ellos
-            //habria que poner un mensaje para el usuario para decirle que no existe ese usuario
-            //System.out.println("No existe ese usuario");
+            response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
           }catch (SQLException | NamingException e){
   					e.printStackTrace();
   					response.sendError(500);
   				}
-      }
       //Aqui si ya existe el usuario, tendriamos que mostrar un mensaje por pantalla, o redirigir a otra página de error
       //session.sendRedirect("/error");
     }
