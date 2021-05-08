@@ -47,12 +47,14 @@ public class DBManager implements AutoCloseable {
       // crea la busqueda
       String query = " SELECT * FROM Usuarios WHERE short_name=?";
       // creamos el usuario para rellenarlo
-      User usuario = new User();
+      User usuario = null;
       try ( PreparedStatement ps = connection.prepareStatement(query)) {
         ps.setString(1, short_name);
         ResultSet rs = ps.executeQuery();
         // si el resultado existe lo pasamos al usuario creado
         if(rs.next()){
+
+          usuario = new User();
           usuario.setId(rs.getInt("id"));
           usuario.setShort_name(rs.getString("short_name"));
           usuario.setLong_name(rs.getString("long_name"));
@@ -192,7 +194,71 @@ public class DBManager implements AutoCloseable {
     }
 
     public List<Message> listUserMessage(int id) throws SQLException{
-      String query = "SELECT Mensajes.id AS idmensaje , Mensajes.text AS mensajes , Mensajes.userId AS iduser ,  Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet , Mensajes.fecha AS fecha FROM Usuarios INNER JOIN Mensajes ON Usuarios.id = Mensajes.userId WHERE Usuarios.id = ? ORDER BY Mensajes.fecha DESC";
+      String query="SELECT * FROM Mensajes WHERE userId=? ORDER BY fecha DESC";
+      ArrayList<Message> buzon = new ArrayList<Message>();
+
+      try(PreparedStatement stmt = connection.prepareStatement(query)) {
+
+        stmt.setInt(1, id);
+
+        ResultSet rs = stmt.executeQuery();
+        while(rs.next()) {
+
+		      Message mensaje = new Message();
+          int retweet = rs.getInt("retweet");
+          if (retweet>=0) {
+            //si el mensaje tiene el valor de retweet igual a null, entonces es un mensaje normal
+            mensaje.setRetweet(retweet);
+            mensaje.setId(rs.getInt("idmensaje"));
+            mensaje.setText(rs.getString("mensajes"));
+            mensaje.setDate(rs.getTimestamp("fecha"));
+            mensaje.setRespuesta(rs.getInt("respuesta"));
+            int user_id = rs.getInt("iduser");
+            User usuario = searchUser(user_id);
+            mensaje.setShortName(usuario.getShort_name());
+            mensaje.setLongName(usuario.getLong_name());
+
+
+          }else{//en el caso de que el campo sea distitnto de null, tenemos que buscar el mensaje original
+                //y rellenar los campos con los datos de ese mensaje
+                mensaje = searchMessage(retweet);
+                //Igualamos el mensaje que tenemos con el Message que nos devuelve el searchMessage()
+          }
+          buzon.add(mensaje);
+        }
+      }
+      return buzon;
+    }
+
+    public Message searchMessage(int id) throws SQLException{
+      String query = " SELECT * FROM Mensajes WHERE id=? ORDER BY Mensajes.fecha DESC";
+      // creamos el usuario para rellenarlo
+      Message mensaje = null;
+      try ( PreparedStatement ps = connection.prepareStatement(query)) {
+        ps.setInt(1, id);
+        ResultSet rs = ps.executeQuery();
+        // si el resultado existe lo pasamos al usuario creado
+        if(rs.next()){
+          mensaje = new Message();
+
+          mensaje.setId(id);
+          mensaje.setUserId(rs.getInt("userId"));
+          mensaje.setText(rs.getString("texto"));
+          mensaje.setDate(rs.getTimestamp("fecha"));
+          mensaje.setRetweet(rs.getInt("retweet"));
+          mensaje.setRespuesta(rs.getInt("respuesta"));
+          //para evitar tener que hacer consultas más dificiles, buscamos el usuario por su id
+          //a partir del objeto que nos devuelve, rellenamoslos campos que nos faltan
+          User usuario = searchUser(mensaje.getUserId());
+          mensaje.setShortName(usuario.getShort_name());
+          mensaje.setLongName(usuario.getLong_name());
+        }
+      }
+      return mensaje;
+    }
+
+    public List<Message> listAnswer(int id) throws SQLException{
+      String query = " SELECT * FROM Mensajes WHERE respuesta=?";
 
       ArrayList<Message> buzon = new ArrayList<Message>();
 
@@ -205,13 +271,13 @@ public class DBManager implements AutoCloseable {
 
 		      Message mensaje = new Message();
 
-          mensaje.setId(rs.getInt("idmensaje"));
-          mensaje.setText(rs.getString("mensajes"));
+          mensaje.setId(id);
+          mensaje.setText(rs.getString("texto"));
           mensaje.setDate(rs.getTimestamp("fecha"));
           mensaje.setRetweet(rs.getInt("retweet"));
           mensaje.setRespuesta(rs.getInt("respuesta"));
-          int user_id = rs.getInt("iduser");
-          User usuario = searchUser(user_id);
+          mensaje.setUserId(rs.getInt("userId"));
+          User usuario = searchUser(mensaje.getUserId());
           mensaje.setShortName(usuario.getShort_name());
           mensaje.setLongName(usuario.getLong_name());
 
@@ -219,8 +285,8 @@ public class DBManager implements AutoCloseable {
         }
       }
       return buzon;
-    }
 
+    }
 
     public void addMessage(Message mensaje) throws SQLException{
       String query = "INSERT INTO Mensajes (userId  , text , fecha) VALUES (? , ? , ?)";
