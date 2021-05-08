@@ -191,21 +191,6 @@ public class DBManager implements AutoCloseable {
       return buzon;
     }
 
-    public void addMessage(Message mensaje) throws SQLException{
-      String query = "INSERT INTO Mensajes (userId  , text , fecha) VALUES (? , ? , ?)";
-
-      try ( PreparedStatement ps = connection.prepareStatement(query)){
-        ps.setInt(1, mensaje.getUserId());
-        ps.setString(2, mensaje.getText());
-        //Cogemos la hora en el servidor
-        Date date = new Date();
-        Timestamp ts=new Timestamp(date.getTime());//Cambiamos el tipo de la hora para poder añadirlo con Timestamp
-        ps.setTimestamp(3,ts);
-
-        ps.executeUpdate();
-      }
-    }
-
     public List<Message> listUserMessage(int id) throws SQLException{
       String query = "SELECT Mensajes.id AS idmensaje , Mensajes.text AS mensajes , Mensajes.userId AS iduser ,  Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet , Mensajes.fecha AS fecha FROM Usuarios INNER JOIN Mensajes ON Usuarios.id = Mensajes.userId WHERE Usuarios.id = ? ORDER BY Mensajes.fecha DESC";
 
@@ -234,6 +219,72 @@ public class DBManager implements AutoCloseable {
         }
       }
       return buzon;
+    }
+
+
+    public void addMessage(Message mensaje) throws SQLException{
+      String query = "INSERT INTO Mensajes (userId  , text , fecha) VALUES (? , ? , ?)";
+
+      try ( PreparedStatement ps = connection.prepareStatement(query)){
+        ps.setInt(1, mensaje.getUserId());
+        ps.setString(2, mensaje.getText());
+        //Cogemos la hora en el servidor
+        Date date = new Date();
+        Timestamp ts=new Timestamp(date.getTime());//Cambiamos el tipo de la hora para poder añadirlo con Timestamp
+        ps.setTimestamp(3,ts);
+
+        ps.executeUpdate();
+      }
+    }
+
+    public void respond(Message mensaje, int id) throws SQLException{
+      //Introducmos en la funcioin el mensaje que queremos crear y el id del mensaje al que estamos respondiendo
+      String query = "INSERT INTO Mensajes (userId ,respuesta , text , fecha) VALUES (? , ? , ? , ?)";
+      try ( PreparedStatement ps = connection.prepareStatement(query)){
+        ps.setInt(1, mensaje.getUserId());
+        ps.setString(2, mensaje.getText());
+        ps.setInt(3,id);
+        //Cogemos la hora en el servidor
+        Date date = new Date();
+        Timestamp ts=new Timestamp(date.getTime());//Cambiamos el tipo de la hora para poder añadirlo con Timestamp
+        ps.setTimestamp(4,ts);
+
+        ps.executeUpdate();
+      }
+    }
+
+    public void retweet(Message mensaje, int id) throws SQLException{
+      //Introducmos en la funcioin el mensaje que queremos crear y el id del mensaje al que estamos respondiendo
+      String query = "INSERT INTO Mensajes (userId , retweet , fecha) VALUES (? , ? , ?)";
+      try ( PreparedStatement ps = connection.prepareStatement(query)){
+        ps.setInt(1, mensaje.getUserId());
+        //cogemos el id del mensaje al que estamos retweeteando
+        ps.setInt(2,id);
+        //Cogemos la hora en el servidor
+        Date date = new Date();
+        Timestamp ts=new Timestamp(date.getTime());//Cambiamos el tipo de la hora para poder añadirlo con Timestamp
+        ps.setTimestamp(3,ts);
+
+        ps.executeUpdate();
+      }
+    }
+
+    public void follow(int id1, int id2) throws SQLException{
+      String query = "INSERT INTO Seguidos VALUES (?,?)";
+      try ( PreparedStatement ps = connection.prepareStatement(query)){
+        ps.setInt(1, id1);
+        ps.setInt(2, id2);
+        ps.executeUpdate();
+      }
+    }
+
+    public void unfollow(int id1, int id2) throws SQLException{
+      String query = "DELETE FROM Seguidos WHERE id=?  AND seguido=?";
+      try ( PreparedStatement ps = connection.prepareStatement(query)){
+        ps.setInt(1, id1);
+        ps.setInt(2, id2);
+        ps.executeUpdate();
+      }
     }
 
 }
