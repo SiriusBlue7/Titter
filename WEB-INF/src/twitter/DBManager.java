@@ -176,17 +176,24 @@ public class DBManager implements AutoCloseable {
         while(rs.next()) {
 
 		      Message mensaje = new Message();
+          int retweet = rs.getInt("retweet");
+          if (retweet<=0) {
+            //si el mensaje tiene el valor de retweet igual a null, entonces es un mensaje normal
+            mensaje.setRetweet(retweet);
+            mensaje.setId(rs.getInt("idmensaje"));
+            mensaje.setText(rs.getString("mensajes"));
+            mensaje.setDate(rs.getTimestamp("fecha"));
+            mensaje.setRespuesta(rs.getInt("respuesta"));
+            int user_id = rs.getInt("iduser");
+            User usuario = searchUser(user_id);
+            mensaje.setShortName(usuario.getShort_name());
+            mensaje.setLongName(usuario.getLong_name());
 
-          mensaje.setId(rs.getInt("idmensaje"));
-          mensaje.setText(rs.getString("mensajes"));
-          mensaje.setDate(rs.getTimestamp("fecha"));
-          mensaje.setRetweet(rs.getInt("retweet"));
-          mensaje.setRespuesta(rs.getInt("respuesta"));
-          int user_id = rs.getInt("iduser");
-          User usuario = searchUser(user_id);
-          mensaje.setShortName(usuario.getShort_name());
-          mensaje.setLongName(usuario.getLong_name());
-
+          }else{//en el caso de que el campo sea distitnto de null, tenemos que buscar el mensaje original
+            //y rellenar los campos con los datos de ese mensaje
+            mensaje = searchMessage(retweet);
+            //Igualamos el mensaje que tenemos con el Message que nos devuelve el searchMessage()
+          }
 			    buzon.add(mensaje);
         }
       }
