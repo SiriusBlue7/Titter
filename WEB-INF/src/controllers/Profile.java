@@ -27,19 +27,29 @@ public class Profile extends HttpServlet {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");
 
-          try(DBManager db = new DBManager()){
-            User profile_user = db.searchUser(request.getParameter("id"));
-            List<Message> messagesUser = db.listUserMessage(profile_user.getId());
+        try(DBManager db = new DBManager()){
+          User profile_user = db.searchUser(request.getParameter("id"));
+          List<Message> messagesUser = db.listUserMessage(profile_user.getId());
+          boolean prof;
 
-            request.setAttribute("profile_user",profile_user);
-            request.setAttribute("messagesUser", messagesUser);
-            
-            RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/profile.jsp");
-            rd.forward(request, response);
-    			} catch (SQLException | NamingException e){
-    					e.printStackTrace();
-    					response.sendError(500);
-    			}
+          if(profile_user.getId() == user.getId() || user == null){
+            prof = false;
+          }else{
+            prof = true;
+            boolean followed = db.followed(user.getId(), profile_user.getId());
+            request.setAttribute("followed", followed);
+          }
+
+          request.setAttribute("profile", prof);
+          request.setAttribute("profile_user",profile_user);
+          request.setAttribute("messagesUser", messagesUser);
+
+          RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/profile.jsp");
+          rd.forward(request, response);
+  			} catch (SQLException | NamingException e){
+  					e.printStackTrace();
+  					response.sendError(500);
+  			}
 
     }
 }

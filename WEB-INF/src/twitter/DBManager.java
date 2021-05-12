@@ -345,7 +345,7 @@ public class DBManager implements AutoCloseable {
     }
 
     public void unfollow(int id1, int id2) throws SQLException{
-      String query = "DELETE FROM Seguidos WHERE id=?  AND seguido=?";
+      String query = "DELETE FROM Seguidos WHERE id=? AND seguido=?";
       try ( PreparedStatement ps = connection.prepareStatement(query)){
         ps.setInt(1, id1);
         ps.setInt(2, id2);
@@ -353,4 +353,17 @@ public class DBManager implements AutoCloseable {
       }
     }
 
+    public boolean followed(int id1, int id2) throws SQLException{
+      boolean result = false;
+      String query = "SELECT * FROM Seguidos WHERE id=? AND seguido=?";
+      try ( PreparedStatement ps = connection.prepareStatement(query)){
+        ps.setInt(1, id1);
+        ps.setInt(2, id2);
+        ResultSet rs = stmt.executeQuery();
+        while(rs.next()) {
+          result = true;
+        }
+      }
+      return result;
+    }
 }
