@@ -164,7 +164,7 @@ public class DBManager implements AutoCloseable {
      */
      //Necesaria revision y terminar
     public List<Message> listMessages(int id) throws SQLException{
-      String query = "SELECT Mensajes.id AS idmensaje , Mensajes.text AS mensajes , Mensajes.userId AS iduser ,  Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet , Mensajes.fecha AS fecha FROM Usuarios INNER JOIN Seguidos ON Usuarios.id = Seguidos.seguido INNER JOIN Mensajes ON Usuarios.id = Mensajes.userId WHERE Seguidos.user = ? ORDER BY Mensajes.fecha DESC";
+      String query = "SELECT Mensajes.id AS idmensaje , Mensajes.text AS mensajes , Mensajes.userId AS iduser ,  Mensajes.respuesta AS respuesta , Mensajes.retweet AS retweet , Mensajes.fecha AS fecha FROM Usuarios INNER JOIN Seguidos ON Usuarios.id = Seguidos.seguido INNER JOIN Mensajes ON Usuarios.id = Mensajes.userId WHERE Seguidos.user = ? ORDER BY Mensajes.fecha DESC LIMIT 50";
 
 		  ArrayList<Message> buzon = new ArrayList<Message>();
 
@@ -194,7 +194,7 @@ public class DBManager implements AutoCloseable {
     }
 
     public List<Message> listUserMessage(int id) throws SQLException{
-      String query="SELECT * FROM Mensajes WHERE userId=? ORDER BY fecha DESC";
+      String query="SELECT * FROM Mensajes WHERE userId=? ORDER BY fecha DESC LIMIT 50";
       ArrayList<Message> buzon = new ArrayList<Message>();
 
       try(PreparedStatement stmt = connection.prepareStatement(query)) {
@@ -206,7 +206,7 @@ public class DBManager implements AutoCloseable {
 
 		      Message mensaje = new Message();
           int retweet = rs.getInt("retweet");
-          if (retweet>=0) {
+          if (retweet<=0) {
             //si el mensaje tiene el valor de retweet igual a null, entonces es un mensaje normal
             mensaje.setRetweet(retweet);
             mensaje.setId(rs.getInt("idmensaje"));
