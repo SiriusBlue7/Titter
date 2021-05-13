@@ -185,6 +185,7 @@ public class DBManager implements AutoCloseable {
             mensaje.setDate(rs.getTimestamp("fecha"));
             mensaje.setRespuesta(rs.getInt("respuesta"));
             int user_id = rs.getInt("iduser");
+	    mensaje.setUserId(user_id);
             User usuario = searchUser(user_id);
             mensaje.setShortName(usuario.getShort_name());
             mensaje.setLongName(usuario.getLong_name());
@@ -366,7 +367,7 @@ public class DBManager implements AutoCloseable {
       try ( PreparedStatement ps = connection.prepareStatement(query)){
         ps.setInt(1, id1);
         ps.setInt(2, id2);
-        ResultSet rs = stmt.executeQuery();
+        ResultSet rs = ps.executeQuery();
         while(rs.next()) {
           result = true;
         }
