@@ -45,7 +45,7 @@ public class DBManager implements AutoCloseable {
 
     public User searchUser(String short_name) throws SQLException {
       // crea la busqueda
-      String query = " SELECT * FROM Usuarios WHERE short_name=?";
+      String query = "SELECT * FROM Usuarios WHERE short_name=?";
       // creamos el usuario para rellenarlo
       User usuario = null;
       try ( PreparedStatement ps = connection.prepareStatement(query)) {
@@ -62,7 +62,7 @@ public class DBManager implements AutoCloseable {
           usuario.setPassword(rs.getString("password"));
         }
       }
-        return usuario;
+      return usuario;
     }
 
     //
@@ -185,8 +185,8 @@ public class DBManager implements AutoCloseable {
             mensaje.setDate(rs.getTimestamp("fecha"));
             mensaje.setRespuesta(rs.getInt("respuesta"));
             int user_id = rs.getInt("iduser");
-	    mensaje.setUserId(user_id);
             User usuario = searchUser(user_id);
+            mensaje.setUserId(user_id);
             mensaje.setShortName(usuario.getShort_name());
             mensaje.setLongName(usuario.getLong_name());
 
@@ -217,11 +217,11 @@ public class DBManager implements AutoCloseable {
           if (retweet<=0) {
             //si el mensaje tiene el valor de retweet igual a null, entonces es un mensaje normal
             mensaje.setRetweet(retweet);
-            mensaje.setId(rs.getInt("idmensaje"));
-            mensaje.setText(rs.getString("mensajes"));
+            mensaje.setId(rs.getInt("id"));
+            mensaje.setText(rs.getString("text"));
             mensaje.setDate(rs.getTimestamp("fecha"));
             mensaje.setRespuesta(rs.getInt("respuesta"));
-            int user_id = rs.getInt("iduser");
+            int user_id = rs.getInt("userId");
             User usuario = searchUser(user_id);
             mensaje.setShortName(usuario.getShort_name());
             mensaje.setLongName(usuario.getLong_name());
@@ -353,7 +353,7 @@ public class DBManager implements AutoCloseable {
     }
 
     public void unfollow(int id1, int id2) throws SQLException{
-      String query = "DELETE FROM Seguidos WHERE id=? AND seguido=?";
+      String query = "DELETE FROM Seguidos WHERE user=? AND seguido=?";
       try ( PreparedStatement ps = connection.prepareStatement(query)){
         ps.setInt(1, id1);
         ps.setInt(2, id2);
@@ -363,7 +363,7 @@ public class DBManager implements AutoCloseable {
 
     public boolean followed(int id1, int id2) throws SQLException{
       boolean result = false;
-      String query = "SELECT * FROM Seguidos WHERE id=? AND seguido=?";
+      String query = "SELECT * FROM Seguidos WHERE user=? AND seguido=?";
       try ( PreparedStatement ps = connection.prepareStatement(query)){
         ps.setInt(1, id1);
         ps.setInt(2, id2);
