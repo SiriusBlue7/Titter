@@ -18,9 +18,9 @@
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 
      <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
-       <div class="container-fluid">
-         <a class="navbar-brand" href="Home">Atras</a>
-       </div>
+       <form action = home>
+         <input class="btn btn-primary" type="submit" value="Home">
+       </form>
        <form action = logout>
          <input class="btn btn-primary" type="submit" value="cerrar sesion">
        </form>
@@ -29,34 +29,39 @@
      <section class="py-5 text-center container">
        <div class="row py-lg-5">
          <div class="col-lg-6 col-md-8 mx-auto">
-           <% User user = request.getAttribute("profile_user") %>
-           <h1 class="fw-light">Perfil de <%= user.getLongName() %></h1>
-           <h3 class="fw-light">@<%= user.getShortName() %></h3>
+           <% User user = (User) request.getAttribute("profile_user"); %>
+           <h1 class="fw-light">Perfil de <%= user.getLong_name() %></h1>
+           <h3 class="fw-light">@<%= user.getShort_name() %></h3>
            <p class="lead text-muted">biografia</p>
-           <% if(request.getAttribute("my") == true) { %>
+           <% boolean prof = (boolean)request.getAttribute("profile"); %>
+           <% if( prof == false) { %>
            <form action = biografia>
              <p>
                <input class="btn btn-primary" type="submit" value="Editar">
              </p>
            </form>
            <% } %>
-           <% if(request.getAttribute("profile") == true) { %>
-           <% if(request.getAttribute("followed") == false){ %>
-           <form action = Follow>
-             <p>
-               <input class="btn btn-primary" type="submit" value="Seguir">
-             </p>
-           </form>
+           <% if(prof == true) { %>
+             <% if((boolean)request.getAttribute("botones")==true){%>
+               <% if((boolean)request.getAttribute("followed") == false){ %>
+               <form action = follow>
+                 <p>
+                   <input type="hidden" name="userId" value="<%= user.getId()%>" >
+                   <input class="btn btn-primary" type="submit" value="Seguir">
+                 </p>
+               </form>
 
-           <% } %>
-           <% if(request.getAttribute("followed") == true){ %>
-           <form action = Unfollow>
-             <p>
-               <input class="btn btn-primary" type="submit" value="Dejar de seguir">
-             </p>
-           </form>
+               <% } %>
+               <% if((boolean) request.getAttribute("followed") == true){ %>
+               <form action = unfollow? >
+                 <p>
+                   <input type="hidden" name="userId" value="<%= user.getId()%>" >
+                   <input class="btn btn-primary" type="submit" value="Dejar de seguir">
+                 </p>
+               </form>
 
-           <% } %>
+               <% } %>
+             <% } %>
            <% } %>
          </div>
        </div>
@@ -79,7 +84,7 @@
 
        <div class="d-flex text-muted pt-3">
          <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-         <p class="pb-3 mb-0 small lh-sm border-bottom">
+         <p class="pb-3 mb-0 small lh-sm border-bottom" action="profile" method="post">
            <strong class="d-block text-gray-dark"><a href="profile?id=<%= mensaje.getUserId() %>"><%=mensaje.getShortName()%></a>@<%=mensaje.getLongName()%></strong>
            <small calss="text-muted"><%=mensaje.getDate()%></small>
            <%= mensaje.getText()%>
