@@ -32,6 +32,7 @@ public class Profile extends HttpServlet {
           List<Message> messagesUser = db.listUserMessage(profile_user.getId());
           boolean prof;
           boolean followed = false;
+          boolean my = false;
 
           if(profile_user.getId() == user.getId() || user == null){
             prof = false;
@@ -40,6 +41,11 @@ public class Profile extends HttpServlet {
             followed = db.followed(user.getId(), profile_user.getId());
           }
 
+          if(profile_user.getId() == user.getId()){
+            my = true;
+          }
+
+          request.setAttribute("my",my);
           request.setAttribute("followed", followed);
           request.setAttribute("profile", prof);
           request.setAttribute("profile_user",profile_user);
