@@ -21,17 +21,18 @@ public class Unfollow extends HttpServlet {
           throws IOException, ServletException {
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
       User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
+      int profileId = Integer.parseInt(request.getParameter("userId"));
       if (user != null) {//comprobamos si en la sesion ya hay algun usuario almacenado
 
           try(DBManager db = new DBManager()){
             // Obtiene el catálogo de libros desde la base de datos
             //recogemos los valores que tiene el servidor del formulario
-            int id_user = user.getId();
-            int id_profile = Integer.parseInt(request.getParameter("id"));
 
-                db.unfollow(id_user, id_profile);//comprobamos si el usuario tiene la misma contraseña que la que han metido ellos
+
+                db.unfollow(user.getId(), profileId);//comprobamos si el usuario tiene la misma contraseña que la que han metido ellos
             //habria que poner un mensaje para el usuario para decirle que no existe ese usuario
             //System.out.println("No existe ese usuario");
+            response.sendRedirect("profile?id="+profileId);
           }catch (SQLException | NamingException e){
   					e.printStackTrace();
   					response.sendError(500);

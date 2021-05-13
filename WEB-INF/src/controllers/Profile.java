@@ -21,31 +21,28 @@ import javax.servlet.http.HttpSession;
 
 @WebServlet("/profile")
 public class Profile extends HttpServlet {
-    public void doPost(HttpServletRequest request, HttpServletResponse response)
+    public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
+        User user = (User)session.getAttribute("user");
 
         try(DBManager db = new DBManager()){
-          User profile_user = db.searchUser(request.getParameter("id"));
-          List<Message> messagesUser = db.listUserMessage(profile_user.getId());
-          boolean prof;
+          int id_usuario = Integer.parseInt(request.getParameter("id"));
+          User profile_user = db.searchUser(id_usuario);
+          List<Message> messagesUser = db.listUserMessage(id_usuario);
+          boolean prof=true;//el prof identifiica si este es el perfil de nuestro usuario o no, y nos deja editar y nos muestra los botones
+          boolean botones = false;
           boolean followed = false;
-          boolean my = false;
-
-          if(profile_user.getId() == user.getId() || user == null){
-            prof = false;
-          }else{
-            prof = true;
-            followed = db.followed(user.getId(), profile_user.getId());
+          if(user!=null){
+            botones = true;
+            if(profile_user.getId() == user.getId()){
+              prof = false;
+            }else{
+              followed = db.followed(user.getId(), profile_user.getId());
+            }
           }
-
-          if(profile_user.getId() == user.getId()){
-            my = true;
-          }
-
-          request.setAttribute("my",my);
+          request.setAttribute("botones", botones);
           request.setAttribute("followed", followed);
           request.setAttribute("profile", prof);
           request.setAttribute("profile_user",profile_user);
