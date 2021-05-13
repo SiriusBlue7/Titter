@@ -31,15 +31,16 @@ public class Profile extends HttpServlet {
           User profile_user = db.searchUser(request.getParameter("id"));
           List<Message> messagesUser = db.listUserMessage(profile_user.getId());
           boolean prof;
+          boolean followed = false;
 
           if(profile_user.getId() == user.getId() || user == null){
             prof = false;
           }else{
             prof = true;
-            boolean followed = db.followed(user.getId(), profile_user.getId());
-            request.setAttribute("followed", followed);
+            followed = db.followed(user.getId(), profile_user.getId());
           }
 
+          request.setAttribute("followed", followed);
           request.setAttribute("profile", prof);
           request.setAttribute("profile_user",profile_user);
           request.setAttribute("messagesUser", messagesUser);
