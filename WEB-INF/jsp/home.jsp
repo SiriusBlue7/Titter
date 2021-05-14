@@ -19,7 +19,8 @@
 
      <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
        <div class="container-fluid">
-         <a class="navbar-brand">¡Bienvenido de nuevo <%= request.getAttribute("user") %>!</a>
+         <%User user = (User)session.getAttribute("user");%>
+         <a class="navbar-brand" ¡Bienvenido de nuevo href="profile?id=<%= user.getId() %>"> ¡Bienvenido de nuevo <%= user.getShort_name() %>!</a>
        </div>
         <form class="d-flex" action="search" >
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
