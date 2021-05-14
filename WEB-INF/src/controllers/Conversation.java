@@ -24,11 +24,11 @@ public class Conversation extends HttpServlet {
         User user = (User) session.getAttribute("user");
         if (user != null) {
           try(DBManager db = new DBManager()){
-            int idMensaje = Integer.parseInt(request.getParameter("idMensaje"));
+            int idMensaje = Integer.parseInt(request.getParameter("id_mensaje"));
             //Obtenemos el id del mensaje principal
             Message principalMessage = db.searchMessage(idMensaje);
             //Obtenemos el mensaje priuncipal por medio de buscarlo por su id
-    				List<Message> messages = db.listMessages(user.getId());
+    				List<Message> messages = db.listAnswer(idMensaje);
             //obtenemos todos los mensajes que estan respondiendo l mensaje principal
 
             //guardamos los dos objetos en la sesion para poder llamarlos luego en el jsp
