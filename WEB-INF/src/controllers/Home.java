@@ -26,7 +26,6 @@ public class Home extends HttpServlet {
           try(DBManager db = new DBManager()){
     				List<Message> messages = db.listMessages(user.getId());
             request.setAttribute("messages", messages);
-            request.setAttribute("user", user.getShort_name());
 
             RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/jsp/home.jsp");
             rd.forward(request, response);
