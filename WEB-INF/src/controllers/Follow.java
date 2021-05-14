@@ -25,8 +25,6 @@ public class Follow extends HttpServlet {
           try(DBManager db = new DBManager()){
             // Obtiene el catálogo de libros desde la base de datos
             //recogemos los valores que tiene el servidor del formulario
-            int id_user = user.getId();
-            int id_profile = Integer.parseInt(request.getParameter("id"));
 
             db.follow(user.getId(), profileId);
             //comprobamos si el usuario tiene la misma contraseña que la que han metido ellos
