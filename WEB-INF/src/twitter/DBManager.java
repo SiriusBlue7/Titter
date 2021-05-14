@@ -251,7 +251,7 @@ public class DBManager implements AutoCloseable {
 
           mensaje.setId(id);
           mensaje.setUserId(rs.getInt("userId"));
-          mensaje.setText(rs.getString("texto"));
+          mensaje.setText(rs.getString("text"));
           mensaje.setDate(rs.getTimestamp("fecha"));
           mensaje.setRetweet(rs.getInt("retweet"));
           mensaje.setRespuesta(rs.getInt("respuesta"));
