@@ -21,8 +21,10 @@ public class Home extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
+        User user = (User) session.getAttribute("user");//Obtenemos el atributo user de la sesion
+
+        if (user != null) {//Comprobamos si el atributo ya ha sido inicializado
+          //si lo esta, procedemos aprerpara los datos para el jsp
           try(DBManager db = new DBManager()){
     				List<Message> messages = db.listMessages(user.getId());
             request.setAttribute("messages", messages);
@@ -33,7 +35,7 @@ public class Home extends HttpServlet {
     					e.printStackTrace();
     					response.sendError(500);
     				}
-        }else{
+        }else{//Sino,se nos reenvia al inicio de sesion
           response.sendRedirect("iniciosesion.html");
         }
 

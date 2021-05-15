@@ -23,22 +23,25 @@ public class Newmessage extends HttpServlet {
       // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
       User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
-      String texto = request.getParameter("text");
+      String texto = request.getParameter("text");//Cogemos el parametro del texto escrito
+      int id = Integer.parseInt(request.getParameter("id"));
+
       java.util.Date utilDate = new java.util.Date();
-      Message mensaje = new Message();
+      Message mensaje = new Message();//Creamos el mensaje
+      //rellenamos los datos del mensaje
        mensaje.setUserId(user.getId());
        mensaje.setText(texto);
        mensaje.setDate(utilDate);
 
           try(DBManager db = new DBManager()){
-            // Obtiene el catálogo de libros desde la base de datos
-            //recogemos los valores que tiene el servidor del formulario
+            //Lllamamos a la funcion que añade el mensaje
             db.addMessage(mensaje);
-            //Buscamos en la base de datos el usuario
-                //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
-              //  response.sendRedirect("/home");
-              //como no estamos cambianndo de página, creo que no hace falta q
+            //Una vez enviado el mensaje , nos devuelve al home
+            if (id>0){//Si el id estamos en un profile ynos reenvia al perfil en el que estabamos
+              response.sendRedirect("profile?=" + id);
+            }else{//si el id es menor o igual que cero, es que estamos en el home, por lo que nos reenvia al home
               response.sendRedirect("home");
+            }
           }catch (SQLException | NamingException e){
   					e.printStackTrace();
   					response.sendError(500);

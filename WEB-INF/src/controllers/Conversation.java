@@ -21,9 +21,8 @@ public class Conversation extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        if (user != null) {
-          try(DBManager db = new DBManager()){
+
+          try(DBManager db = new DBManager()){//Iniciamos para poder acceder a las funciones del DBManager
             int idMensaje = Integer.parseInt(request.getParameter("id_mensaje"));
             //Obtenemos el id del mensaje principal
             Message principalMessage = db.searchMessage(idMensaje);
@@ -41,8 +40,5 @@ public class Conversation extends HttpServlet {
     					e.printStackTrace();
     					response.sendError(500);
     				}
-        }else{
-          response.sendRedirect("iniciosesion.html");
-        }
     }
 }
