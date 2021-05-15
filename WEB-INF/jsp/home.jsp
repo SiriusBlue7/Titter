@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <script src="botones.js" type="text/javascript"></script>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
 
@@ -23,7 +23,7 @@
          <a class="navbar-brand" ¡Bienvenido de nuevo href="profile?id=<%= user.getId() %>"> ¡Bienvenido de nuevo <%= user.getShort_name() %>!</a>
        </div>
         <form class="d-flex" action="search" >
-          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
           <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
        <form action = logout>
@@ -31,14 +31,6 @@
        </form>
       </nav>
 
-        <nav class="navbar navbar-light bg-light">
-          <div class="container-fluid">
-            <form class="d-flex" action="search" >
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
-        </nav>
 
      <div class="container col-xl-10 px-4 py-5">
        <form class="p-5 border rounded-3 bg-light" action="newmessage">
