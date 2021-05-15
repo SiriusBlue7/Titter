@@ -20,18 +20,22 @@ public class Search extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
           HttpSession session = request.getSession();
+          //recogemos el parametro que nos ha pasado el input con el nombre del usuario
           String new_user = request.getParameter("search");
+
           try(DBManager db = new DBManager()){
-            User usuario = db.searchUser(new_user);
+            User usuario = db.searchUser(new_user);//Buscamos el usuario en la base de datos
 
             if (usuario!=null) {
               int id = usuario.getId();
               response.sendRedirect("profile?id="+ id);
+            }else{//En el caso en el que no exista, nos lleva al Home
+              sendRedirect("home");
             }
-    				} catch (SQLException | NamingException e){
-    					e.printStackTrace();
-    					response.sendError(500);
-    				}
+  				} catch (SQLException | NamingException e){
+  					e.printStackTrace();
+  					response.sendError(500);
+  				}
 
     }
 }

@@ -27,19 +27,27 @@ public class Retweet extends HttpServlet {
       int id_mensaje = Integer.parseInt(request.getParameter("id_mensaje"));
       //cogemos la hora para crear el mensaje del usuario
       java.util.Date utilDate = new java.util.Date();
+      //Definimos el mensaje a subir
       Message mensaje = new Message();
-       mensaje.setUserId(user.getId());
-       mensaje.setDate(utilDate);
+      //Rellenamos el mensaje
+      mensaje.setUserId(user.getId());
+      mensaje.setDate(utilDate);
 
-          try(DBManager db = new DBManager()){
-            //llamamos a la funcion para que guarde el mensaje en la base de datos
-            db.retweet(mensaje,id_mensaje);
-
-            response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
-          }catch (SQLException | NamingException e){
-  					e.printStackTrace();
-  					response.sendError(500);
-  				}
+      try(DBManager db = new DBManager()){
+        //llamamos a la funcion para que guarde el mensaje en la base de datos
+        db.retweet(mensaje,id_mensaje);
+        if (request.getParameter("id")!=null) {//Comprobamos si el parametro "id" es distinto de null
+          //Cogemos el parametro para poder usarlo
+          int id = Integer.parseInt(request.getParameter("id"));
+          //nos reenvia profile en el que estabamos
+          response.sendRedirect("profile?id=");
+        }else{//sino, nos reenvia al home
+          response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
+        }
+      }catch (SQLException | NamingException e){
+				e.printStackTrace();
+				response.sendError(500);
+			}
       //Aqui si ya existe el usuario, tendriamos que mostrar un mensaje por pantalla, o redirigir a otra página de error
       //session.sendRedirect("/error");
     }

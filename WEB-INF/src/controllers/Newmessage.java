@@ -37,10 +37,11 @@ public class Newmessage extends HttpServlet {
             //Lllamamos a la funcion que añade el mensaje
             db.addMessage(mensaje);
             //Una vez enviado el mensaje , nos devuelve al home
-            if (id>0){//Si el id estamos en un profile ynos reenvia al perfil en el que estabamos
-              response.sendRedirect("profile?=" + id);
-            }else{//si el id es menor o igual que cero, es que estamos en el home, por lo que nos reenvia al home
-              response.sendRedirect("home");
+            if (request.getParameter("id")!=null) {
+              int id = Integer.parseInt(request.getParameter("id"));
+              response.sendRedirect("profile?id=");
+            }else{
+              response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
             }
           }catch (SQLException | NamingException e){
   					e.printStackTrace();
