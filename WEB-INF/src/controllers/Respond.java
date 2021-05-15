@@ -1,5 +1,5 @@
 package controllers;
-import twitter.*;//Esto accede a la libreria que hemos creado nosotros en BookShop y podamos acceder a llamarlo
+import twitter.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
