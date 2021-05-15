@@ -22,20 +22,15 @@ public class Follow extends HttpServlet {
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
       User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
       int profileId = Integer.parseInt(request.getParameter("userId"));
-          try(DBManager db = new DBManager()){
-            // Obtiene el catálogo de libros desde la base de datos
-            //recogemos los valores que tiene el servidor del formulario
-
-            db.follow(user.getId(), profileId);
-            //comprobamos si el usuario tiene la misma contraseña que la que han metido ellos
-            //habria que poner un mensaje para el usuario para decirle que no existe ese usuario
-            //System.out.println("No existe ese usuario");
-            response.sendRedirect("profile?id="+profileId);
-          }catch (SQLException | NamingException e){
-  					e.printStackTrace();
-  					response.sendError(500);
-  				}
-      //Aqui si ya existe el usuario, tendriamos que mostrar un mensaje por pantalla, o redirigir a otra página de error
-      //session.sendRedirect("/error");
+      //obtenemos el parametro que se nos pasa con el id del usuario al que queremos seguir
+      try(DBManager db = new DBManager()){//Creamos la clase DBManager para poder acceder a sus funciones
+        //llamamos a la funcion que se encarga de añadir en la BD la línea que indica que se siguen
+        db.follow(user.getId(), profileId);
+        //Una vez terminado, nos redirige a la página de perfil en la que estabamos
+        response.sendRedirect("profile?id="+profileId);
+      }catch (SQLException | NamingException e){
+				e.printStackTrace();
+				response.sendError(500);
+			}
     }
   }
