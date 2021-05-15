@@ -38,7 +38,12 @@ public class Respond extends HttpServlet {
         //llamamos a la funcion para que guarde el mensaje en la base de datos
         db.respond(mensaje,id_mensaje);
 
-        response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
+        if (request.getParameter("id")!=null) {
+         int id = Integer.parseInt(request.getParameter("id"));
+         response.sendRedirect("profile?id=");//en caso de estar viendo un perfil, volvemos a el
+       }else{
+         response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
+       }
       }catch (SQLException | NamingException e){
 				e.printStackTrace();
 				response.sendError(500);
