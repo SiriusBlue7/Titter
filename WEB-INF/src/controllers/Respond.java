@@ -29,20 +29,19 @@ public class Respond extends HttpServlet {
       //cogemos la hora para crear el mensaje del usuario
       java.util.Date utilDate = new java.util.Date();
       Message mensaje = new Message();
-       mensaje.setUserId(user.getId());
-       mensaje.setText(texto);
-       mensaje.setDate(utilDate);
+      //creamos mensaje del usuario
+      mensaje.setUserId(user.getId());
+      mensaje.setText(texto);
+      mensaje.setDate(utilDate);
 
-          try(DBManager db = new DBManager()){
-            //llamamos a la funcion para que guarde el mensaje en la base de datos
-            db.respond(mensaje,id_mensaje);
+      try(DBManager db = new DBManager()){
+        //llamamos a la funcion para que guarde el mensaje en la base de datos
+        db.respond(mensaje,id_mensaje);
 
-            response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
-          }catch (SQLException | NamingException e){
-  					e.printStackTrace();
-  					response.sendError(500);
-  				}
-      //Aqui si ya existe el usuario, tendriamos que mostrar un mensaje por pantalla, o redirigir a otra página de error
-      //session.sendRedirect("/error");
+        response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
+      }catch (SQLException | NamingException e){
+				e.printStackTrace();
+				response.sendError(500);
+			}
     }
   }
