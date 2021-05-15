@@ -1,5 +1,5 @@
 package controllers;
-import twitter.*;//Esto accede a la libreria que hemos creado nosotros en BookShop y podamos acceder a llamarlo
+import twitter.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,14 +19,13 @@ import javax.servlet.http.HttpSession;
 public class Login extends HttpServlet {
   public void doPost(HttpServletRequest request, HttpServletResponse response)
           throws IOException, ServletException {
-      // Obtiene el carro de la compra desde la sesión. Lo crea si no existe.
+
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
       User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
       if (user == null) {//comprobamos si en la sesion ya hay algun usuario almacenado
 
           try(DBManager db = new DBManager()){
-            // Obtiene el catálogo de libros desde la base de datos
-            //recogemos los valores que tiene el servidor del formulario
+            // recogemos el valor del nombre de usuario y la contraseña
             String new_user = request.getParameter("user");
             String password = request.getParameter("password");
             //Buscamos en la base de datos el usuario
@@ -35,20 +34,16 @@ public class Login extends HttpServlet {
                 session.setAttribute("user",user);
                 //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
                 response.sendRedirect("home");
-            }else{
+            }else{//de no ser asi, devuelve un parametro error
               response.sendRedirect("iniciosesion.html?error=1");
             }
 
-            //habria que poner un mensaje para el usuario para decirle que no existe ese usuario
-            //System.out.println("No existe ese usuario");
           }catch (SQLException | NamingException e){
   					e.printStackTrace();
   					response.sendError(500);
   				}
-      }else{
+      }else{//si ya hay un usuario almacenado nos redirige directamente a la pagina home del usuario
         response.sendRedirect("home");
       }
-      //Aqui si ya existe el usuario, tendriamos que mostrar un mensaje por pantalla, o redirigir a otra página de error
-      //session.sendRedirect("/error");
     }
   }
