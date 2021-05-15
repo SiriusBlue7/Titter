@@ -41,19 +41,55 @@
        </div>
      </section>
 
+     <div class="container col-xl-10 px-4 py-5">
+       <form class="p-5 border rounded-3 bg-light" action="respond">
+         <div class="mb-3">
+           <label for="floatingtitle" class="form-label">¡Responde a este mensaje!</label>
+           <input type="hidden" name="id_mensaje" value="<%= principal.getId()%>" >
+           <textarea class="form-control" name="text" rows="4" cols="70" maxlength="280" id="floatingtitle" placeholder="respuesta..."></textarea>
+         </div>
+         <input class="btn btn-primary" type="submit" value="twittear">
+       </form>
+     </div>
+
      <div class="my-3 p-3 bg-body rounded shadow-sm">
        <h6 class="border-bottom pb-2 mb-0">Respuestas</h6>
-       <% List<Message> lista = (List<Message>) request.getAttribute("messagesUser"); %>
+       <% List<Message> lista = (List<Message>) request.getAttribute("messages"); %>
        <% if(lista != null){ %>
        <% for (Message mensaje: lista) { %>
 
        <div class="d-flex text-muted pt-3">
          <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#007bff"/><text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text></svg>
-         <p class="pb-3 mb-0 small lh-sm border-bottom">
-           <strong class="d-block text-gray-dark"><a href="profile?id=<%= mensaje.getUserId() %>"><%=mensaje.getShortName()%></a>@<%=mensaje.getLongName()%></strong>
+         <p class="pb-3 mb-0 small lh-sm border-bottom" action="profile" method="post">
+           <strong class="d-block text-gray-dark"><a href="profile?id=<%= mensaje.getUserId() %>" method=><%=mensaje.getShortName()%></a>@<%=mensaje.getLongName()%></strong>
            <small calss="text-muted"><%=mensaje.getDate()%></small>
            <%= mensaje.getText()%>
          </p>
+       </div>
+       <div class="btn-group btn-group" role="group" aria-label="retweet">
+         <form action="retweet">
+           <input type="hidden" name="id_mensaje" value="<%= mensaje.getId()%>" >
+           <button type="submit" class="btn-sm btn-outline-primary">retweet</button>
+         </form>
+         <% if(mensaje.getRespuesta() > 0){ %>
+           <form action="conversation">
+             <input type="hidden" name="id_mensaje" value="<%= mensaje.getRespuesta()%>" >
+             <button type="submit" class="btn-sm btn-outline-primary">Conversacion</button>
+           </form>
+         <% }else{ %>
+           <form action="conversation">
+             <input type="hidden" name="id_mensaje" value="<%= mensaje.getId()%>" >
+             <button type="submit" class="btn-sm btn-outline-primary">Conversacion</button>
+           </form>
+         <% } %>
+         <form>
+           <% if(mensaje.getRespuesta()>0){ %>
+            <input type="hidden" name="id_original" value="<%= mensaje.getRespuesta()%>" >
+           <%}else{%>
+            <input type="hidden" name="id_original" value="<%= mensaje.getId()%>" >
+           <%}%>
+           <input type="button" class="btn-sm btn-outline-primary" name="respuesta" id="<%= mensaje.getId()%>" value="responder" >
+         </form>
        </div>
        <% } %>
        <% } %>
