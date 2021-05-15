@@ -355,6 +355,11 @@ public class DBManager implements AutoCloseable {
       }
     }
 
+    /*
+    *
+    *Inserta un mensaje nuevo marcado como respuesta a otro mensaje, cuyo id se indica
+    *como parametro.
+    */
     public void respond(Message mensaje, int id) throws SQLException{
       //Introducmos en la funcioin el mensaje que queremos crear y el id del mensaje al que estamos respondiendo
       String query = "INSERT INTO Mensajes (userId ,respuesta , text , fecha) VALUES (? , ? , ? , ?)";
@@ -372,6 +377,12 @@ public class DBManager implements AutoCloseable {
       }
     }
 
+    /*
+    *
+    *Inserta un mensaje vacio que marca en el apartado retweet el id del mensaje que
+    *se desea retransmitir.
+    *
+    */
     public void retweet(Message mensaje, int id) throws SQLException{
       //Introducmos en la funcioin el mensaje que queremos crear y el id del mensaje al que estamos respondiendo
       String query = "INSERT INTO Mensajes (userId , retweet , fecha) VALUES (? , ? , ?)";
