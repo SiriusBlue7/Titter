@@ -20,9 +20,8 @@ public class Search extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
           HttpSession session = request.getSession();
+          String new_user = request.getParameter("search");
           try(DBManager db = new DBManager()){
-
-    				String new_user = request.getParameter("search");
             User usuario = db.searchUser(new_user);
 
             if (usuario!=null) {
