@@ -4,6 +4,7 @@ CREATE TABLE Usuarios(
 	long_name VARCHAR(30) NOT NULL,
 	mail VARCHAR(40) NOT NULL,
 	password VARCHAR(10) NOT NULL,
+	description VARCHAR(280) NULL,
 	PRIMARY KEY(id)
 );
 
@@ -28,3 +29,9 @@ CREATE TABLE Seguidos(
 	CONSTRAINT FOREIGN KEY (user) REFERENCES Usuarios(id),
 	CONSTRAINT FOREIGN KEY (seguido) REFERENCES Usuarios(id)
 );
+
+
+DELETE FROM Seguidos;
+DELETE FROM Mensajes;
+DELETE FROM Usuarios;
+
