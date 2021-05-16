@@ -18,13 +18,17 @@
      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 
      <nav class="navbar navbar-expand-lg fixed-top navbar-dark bg-dark" aria-label="Main navigation">
-       <form action = home>
-         <input class="btn btn-primary" type="submit" value="Home">
-       </form>
+       <div class="container-fluid">
+         <a class="navbar-brand" href="home">Atras</a>
+       </div>
+        <form class="d-flex" action="search" >
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
+          <button class="btn btn-primary" type="submit">Search</button>
+        </form>
        <form action = logout>
          <input class="btn btn-primary" type="submit" value="cerrar sesion">
        </form>
-     </nav>
+      </nav>
 
      <section class="py-5 text-center container">
        <div class="row py-lg-5">
