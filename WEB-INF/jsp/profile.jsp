@@ -33,10 +33,15 @@
            <h1 class="fw-light">Perfil de <%= user.getLong_name() %></h1>
            <h3 class="fw-light">@<%= user.getShort_name() %></h3>
            <p class="lead text-muted">biografia</p>
+           <p class="lead text-muted"><%= user.getDescription() %></p>
            <% boolean prof = (boolean)request.getAttribute("profile"); %>
            <% if( prof == false) { %>
-           <form action = biografia>
+           <form action = "description">
              <p>
+               <div class="mb-3">
+                 <label for="floatingtitle" class="form-label">¿Que quieres compartir con el mundo? </label>
+                 <textarea class="form-control" name="text" rows="4" cols="70" maxlength="280" id="floatingtitle" placeholder="compartelo..."></textarea>
+               </div>
                <input class="btn btn-primary" type="submit" value="Editar">
              </p>
            </form>
