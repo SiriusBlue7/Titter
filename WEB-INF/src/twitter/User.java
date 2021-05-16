@@ -6,6 +6,7 @@ public class User{
   private String long_name;
   private String mail;
   private String password;
+  private String description;
 
   public int getId(){
     return id;
@@ -25,6 +26,10 @@ public class User{
 
   public String getPassword(){
     return password;
+  }
+
+  public String getDescription(){
+    return description;
   }
 
   public void setId(int id){
@@ -47,8 +52,7 @@ public class User{
     this.password = password;
   }
 
-  /*public String toString(){
-
+  public void setDescription(String description){
+    this.description = description;
   }
-  */
 }

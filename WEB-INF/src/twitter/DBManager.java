@@ -178,7 +178,6 @@ public class DBManager implements AutoCloseable {
       }
     }
 
-
     /*
      * devuelve un ArrayList con los mensajes relacionados con el id
      * del usuario
@@ -445,5 +444,22 @@ public class DBManager implements AutoCloseable {
         }
       }
       return result;
+    }
+
+    /*
+    *
+    *En esta función cambiamos la descripcion que tiene l@ usuari@ con sesion iniciadaca, con la que quiera
+    *
+    */
+    public void changeDescription(String description, int id){
+      String query = "UPDATE Usuarios SET description=? WHERE id=?";
+      //Creamos el query para actualizar la ddescripción del usuariuario con la id que se nos pasa
+      try(PreparedStatement ps= connection.prepareStatement(query)){//Prepararmos el query para poder ejecutralo de forma segura
+        //rellenamos la consulta con los datos que se nos han pasado
+        ps.setString(1,description);
+        ps.setInt(2,id);
+
+        ps.executeQuery();//Ejecutamos el update
+      }
     }
 }
