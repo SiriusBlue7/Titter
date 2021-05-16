@@ -21,10 +21,25 @@ public class Conversation extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
         HttpSession session = request.getSession();
+        int room;
+        int number;
+        if (session.getAttribute("room")==null) {
+          room = 3;
+          session.setAttribute("room",room);
+        }
+        if (session.getAttribute("number")==null) {
+          number = 0;
+          session.setAttribute("number",number);
+        }
+         room = (int) session.getAttribute("room");
+         number = (int) session.getAttribute("number");
+
+         room = 3;
 
           try(DBManager db = new DBManager()){//Iniciamos para poder acceder a las funciones del DBManager
             int idMensaje = Integer.parseInt(request.getParameter("id_mensaje"));
             //Obtenemos el id del mensaje principal
+            number = idMensaje;
             Message principalMessage = db.searchMessage(idMensaje);
             //Obtenemos el mensaje priuncipal por medio de buscarlo por su id
     				List<Message> messages = db.listAnswer(idMensaje);

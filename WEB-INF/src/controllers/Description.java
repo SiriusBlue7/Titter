@@ -26,16 +26,16 @@ public class Description extends HttpServlet {
 
         try(DBManager db = new DBManager()){//Iniciamos para poder acceder a las funciones del DBManager
 
-          if (request.getParameter("Description") != null) {//si la el campo description no esta vacio, procedemos
-            String description = request.getParameter("Description"));//obtenemos la descripcion que nos han dado
+          if (request.getParameter("description") != null) {//si la el campo description no esta vacio, procedemos
+            String description = request.getParameter("description");//obtenemos la descripcion que nos han dado
 
             db.changeDescription(description, user.getId());//modificamos el elemento en la base de datos
 
             user.setDescription(description);//modificamos la nueva descripcio'n en el usuario que tenemos
-
             
+            response.sendRedirect("profile?id="+user.getId());
           }else{//Si el campo description esta vacio, que nos devuelva l perfil en el que estabamos sin cambiar nada
-            response.sendRedirect("profile?id="+user.id);
+            response.sendRedirect("profile?id="+user.getId());
           }
 
 				} catch (SQLException | NamingException e){

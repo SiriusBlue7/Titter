@@ -41,9 +41,8 @@ public class Register extends HttpServlet {
 
             db.addUser(new_user);//Guardamos el nuevo usuario en la BD
 
-            session.setAttribute("user", new_user);//Automaticamente iniciamos sesion en la aplicacion
             //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
-            response.sendRedirect("home");
+            response.sendRedirect("iniciosesion.html");
           }
 		   } catch (SQLException | NamingException e){
 				e.printStackTrace();

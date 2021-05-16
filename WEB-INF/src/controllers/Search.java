@@ -30,7 +30,7 @@ public class Search extends HttpServlet {
               int id = usuario.getId();
               response.sendRedirect("profile?id="+ id);
             }else{//En el caso en el que no exista, nos lleva al Home
-              sendRedirect("home");
+              response.sendRedirect("home");
             }
   				} catch (SQLException | NamingException e){
   					e.printStackTrace();

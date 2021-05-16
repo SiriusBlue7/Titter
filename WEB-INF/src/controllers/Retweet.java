@@ -23,6 +23,8 @@ public class Retweet extends HttpServlet {
 
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
       User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
+      int room = (int) session.getAttribute("room");
+      int number = (int) session.getAttribute("number");
       //cogemos los elementos del texto que hemos escrito y el id del mensaje para crear el objeto y enviarlo en la funcion
       int id_mensaje = Integer.parseInt(request.getParameter("id_mensaje"));
       //cogemos la hora para crear el mensaje del usuario
@@ -36,11 +38,14 @@ public class Retweet extends HttpServlet {
       try(DBManager db = new DBManager()){
         //llamamos a la funcion para que guarde el mensaje en la base de datos
         db.retweet(mensaje,id_mensaje);
-        if (request.getParameter("id")!=null) {//Comprobamos si el parametro "id" es distinto de null
+        if (room == 2) {//Si roo
           //Cogemos el parametro para poder usarlo
-          int id = Integer.parseInt(request.getParameter("id"));
+          int id = number;
           //nos reenvia profile en el que estabamos
           response.sendRedirect("profile?id=");
+        }else if(room == 3){
+          int id = number;
+          response.sendRedirect("conversation?id_mensaje=" + id);
         }else{//sino, nos reenvia al home
           response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
         }

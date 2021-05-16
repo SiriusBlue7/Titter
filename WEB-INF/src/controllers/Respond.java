@@ -23,6 +23,8 @@ public class Respond extends HttpServlet {
 
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
       User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
+      int room = (int) session.getAttribute("room");
+      int number = (int) session.getAttribute("number");
       //cogemos los elementos del texto que hemos escrito y el id del mensaje para crear el objeto y enviarlo en la funcion
       String texto = request.getParameter("text");
       int id_mensaje = Integer.parseInt(request.getParameter("id_mensaje"));
@@ -38,12 +40,16 @@ public class Respond extends HttpServlet {
         //llamamos a la funcion para que guarde el mensaje en la base de datos
         db.respond(mensaje,id_mensaje);
 
-        if (request.getParameter("id")!=null) {
-         int id = Integer.parseInt(request.getParameter("id"));
-         response.sendRedirect("profile?id=");//en caso de estar viendo un perfil, volvemos a el
+        if (room == 2) {
+         int id = number;
+         response.sendRedirect("profile?id="+id);//en caso de estar viendo un perfil, volvemos a el
+       }else if(room == 3){
+         int id = number;
+         response.sendRedirect("conversation?id_mensaje=" + id);
        }else{
          response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
        }
+
       }catch (SQLException | NamingException e){
 				e.printStackTrace();
 				response.sendError(500);

@@ -22,6 +22,20 @@ public class Home extends HttpServlet {
             throws IOException, ServletException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("user");//Obtenemos el atributo user de la sesion
+        int room;
+        int number;
+        if (session.getAttribute("room")==null) {
+          room = 1;
+          session.setAttribute("room",room);
+        }
+        if (session.getAttribute("number")==null) {
+          number = 0;
+          session.setAttribute("number",number);
+        }
+         room = (int) session.getAttribute("room");
+         number = (int) session.getAttribute("number");
+
+         room = 1;
 
         if (user != null) {//Comprobamos si el atributo ya ha sido inicializado
           //si lo esta, procedemos aprerpara los datos para el jsp

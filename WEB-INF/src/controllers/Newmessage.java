@@ -24,7 +24,8 @@ public class Newmessage extends HttpServlet {
       HttpSession session = request.getSession();//Con esto lo que hacemos es entrar en la sesion
       User user = (User) session.getAttribute("user");//Cogemos el atributo user dentro de la sesion
       String texto = request.getParameter("text");//Cogemos el parametro del texto escrito
-      int id = Integer.parseInt(request.getParameter("id"));
+      int room = (int) session.getAttribute("room");
+      int number = (int) session.getAttribute("number");
 
       java.util.Date utilDate = new java.util.Date();
       Message mensaje = new Message();//Creamos el mensaje
@@ -37,9 +38,9 @@ public class Newmessage extends HttpServlet {
             //Lllamamos a la funcion que añade el mensaje
             db.addMessage(mensaje);
             //Una vez enviado el mensaje , nos devuelve al home
-            if (request.getParameter("id")!=null) {
-              int id = Integer.parseInt(request.getParameter("id"));
-              response.sendRedirect("profile?id=");
+            if(room == 2){
+              int id = number;
+              response.sendRedirect("profile?id="+id );
             }else{
               response.sendRedirect("home");//como estamos en el home, que nos vuelvba a llevar ahi
             }

@@ -31,9 +31,13 @@ public class Login extends HttpServlet {
             //Buscamos en la base de datos el usuario
             user = db.authenticate(new_user,password);//Nos devuelve un usuario que tenga el mismo name y password
             if(user!=null) {//comprobamos si el usuario, existe, de no ser asi, se nos devuelve un user null
-                session.setAttribute("user",user);
-                //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
-                response.sendRedirect("home");
+              int room = 1;//Este parametro indica que que habitacion estamos
+              int number= 0;//Este indica , que si estamos en un Profile o Conversation, cual es el id de esta
+              session.setAttribute("room",room);
+              session.setAttribute("number",number);
+              session.setAttribute("user",user);
+              //una vez comprobado que todo esta bien, redirigimos a la pagina principal del usuario
+              response.sendRedirect("home");
             }else{//de no ser asi, devuelve un parametro error
               response.sendRedirect("iniciosesion.html?error=1");
             }

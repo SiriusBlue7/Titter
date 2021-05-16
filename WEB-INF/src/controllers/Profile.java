@@ -21,12 +21,30 @@ public class Profile extends HttpServlet {
             throws IOException, ServletException {
 
         HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("user");//Obtenemos el atributo user de la sesion
+        int room;
+        int number;
+        if (session.getAttribute("room")==null) {
+          room = 2;
+          session.setAttribute("room",room);
+        }
+        if (session.getAttribute("number")==null) {
+          number = 0;
+          session.setAttribute("number",number);
+        }
+         room = (int) session.getAttribute("room");
+         number = (int) session.getAttribute("number");
+
+         room = 2;
 
         try(DBManager db = new DBManager()){//Creamos el DBManager para usar las funciones
 
           int id_usuario = Integer.parseInt(request.getParameter("id"));//Cogemos el parametro del perfil para saber el perfil que buscar
 
           User profile_user = db.searchUser(id_usuario);
+
+          number = id_usuario;
+
           if (profile_user!=null) {//Si el usuario que buscamos existe, preparamos para crear la página
             List<Message> messagesUser = db.listUserMessage(id_usuario);
             boolean prof=true;//el prof identifiica si este es el perfil de nuestro usuario o no, y nos deja editar y nos muestra los botones
