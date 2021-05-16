@@ -68,6 +68,7 @@ public class DBManager implements AutoCloseable {
           usuario.setLong_name(rs.getString("long_name"));
           usuario.setMail(rs.getString("mail"));
           usuario.setPassword(rs.getString("password"));
+          usuario.setDescription(rs.getString("description"));
         }
       }
       return usuario;
@@ -93,6 +94,7 @@ public class DBManager implements AutoCloseable {
             user.setLong_name(rs.getString("long_name"));
             user.setMail(rs.getString("mail"));
             user.setPassword(rs.getString("password"));
+            user.setDescription(rs.getString("description"));
           }
         }
       return user;
@@ -119,6 +121,7 @@ public class DBManager implements AutoCloseable {
           usuario.setLong_name(rs.getString("long_name"));
           usuario.setMail(rs.getString("mail"));
           usuario.setPassword(rs.getString("password"));
+          usuario.setDescription(rs.getString("description"));
         }
       }
         return usuario;
@@ -339,7 +342,7 @@ public class DBManager implements AutoCloseable {
     */
     public void addMessage(Message mensaje) throws SQLException{
       //Creamos la query, en la que indicamos
-      String query = "INSERT INTO Mensajes (userId  , text , fecha) VALUES (? , ? , ?)";
+      String query = "INSERT INTO Mensajes (userId , text , fecha) VALUES (? , ? , ?)";
 
       try ( PreparedStatement ps = connection.prepareStatement(query)){
         //Rellenamos los valores del PreparedStatement de forma segura
@@ -451,7 +454,7 @@ public class DBManager implements AutoCloseable {
     *En esta función cambiamos la descripcion que tiene l@ usuari@ con sesion iniciadaca, con la que quiera
     *
     */
-    public void changeDescription(String description, int id){
+    public void changeDescription(String description, int id) throws SQLException{
       String query = "UPDATE Usuarios SET description=? WHERE id=?";
       //Creamos el query para actualizar la ddescripción del usuariuario con la id que se nos pasa
       try(PreparedStatement ps= connection.prepareStatement(query)){//Prepararmos el query para poder ejecutralo de forma segura
@@ -459,7 +462,7 @@ public class DBManager implements AutoCloseable {
         ps.setString(1,description);
         ps.setInt(2,id);
 
-        ps.executeQuery();//Ejecutamos el update
+        ps.executeUpdate();//Ejecutamos el update
       }
     }
 }
