@@ -37,7 +37,9 @@
            <h1 class="fw-light">Perfil de <%= user.getLong_name() %></h1>
            <h3 class="fw-light">@<%= user.getShort_name() %></h3>
            <p class="lead text-muted">biografia</p>
+           <%if(user.getDescription()!=null){%>
            <p class="lead text-muted"><%= user.getDescription() %></p>
+           <% } %>
            <% boolean prof = (boolean)request.getAttribute("profile"); %>
            <% if( prof == false) { %>
            <form action = "description">
@@ -100,7 +102,7 @@
          </p>
        </div>
 
-       <% if(user != null){ %>
+       <% if(prof == true){ %>
          <div class="mb-3">
           <form action="respond">
              <textarea class="form-control" name="text" rows="2" cols="35" maxlength="280" id="floatingtitle" placeholder="responde a este mensaje"></textarea>
