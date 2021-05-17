@@ -55,11 +55,28 @@
            <%= mensaje.getText()%>
          </p>
        </div>
+       <% User us = (User) session.getAttribute("user"); %>
+       <% if(us != null){ %>
+         <div class="mb-3">
+          <form action="respond">
+             <textarea class="form-control" name="text" rows="2" cols="35" maxlength="280" id="floatingtitle" placeholder="responde a este mensaje"></textarea>
+             <% if(mensaje.getRespuesta()>0){ %>
+              <input type="hidden" name="id_mensaje" value="<%= mensaje.getRespuesta()%>" >
+             <%}else{%>
+              <input type="hidden" name="id_mensaje" value="<%= mensaje.getId()%>" >
+             <%}%>
+             <input type="submit" class="btn-sm btn-outline-primary" name="respuesta" id="<%= mensaje.getId()%>" value="responder" >
+           </form>
+         </div>
+         <div class="btn-group btn-group" role="group" aria-label="retweet">
+           <form action="retweet">
+             <input type="hidden" name="id_mensaje" value="<%= mensaje.getId()%>" >
+             <button type="submit" class="btn-sm btn-outline-primary">retweet</button>
+           </form>
+         </div>
+       <% } %>
+
        <div class="btn-group btn-group" role="group" aria-label="retweet">
-         <form action="retweet">
-           <input type="hidden" name="id_mensaje" value="<%= mensaje.getId()%>" >
-           <button type="submit" class="btn-sm btn-outline-primary">retweet</button>
-         </form>
          <% if(mensaje.getRespuesta() > 0){ %>
            <form action="conversation">
              <input type="hidden" name="id_mensaje" value="<%= mensaje.getRespuesta()%>" >
@@ -71,14 +88,6 @@
              <button type="submit" class="btn-sm btn-outline-primary">Conversacion</button>
            </form>
          <% } %>
-         <form>
-           <% if(mensaje.getRespuesta()>0){ %>
-            <input type="hidden" name="id_original" value="<%= mensaje.getRespuesta()%>" >
-           <%}else{%>
-            <input type="hidden" name="id_original" value="<%= mensaje.getId()%>" >
-           <%}%>
-           <input type="button" class="btn-sm btn-outline-primary" name="respuesta" id="<%= mensaje.getId()%>" value="responder" >
-         </form>
        </div>
        <% } %>
      </div>
