@@ -78,6 +78,8 @@
        </div>
      </section>
 
+     <% User us = (User) session.getAttribute("user"); %>
+     <% if(us != null){ %>
      <div class="container col-xl-10 px-4 py-5">
        <form class="p-5 border rounded-3 bg-light" action="newmessage">
          <div class="mb-3">
@@ -87,6 +89,7 @@
          <input class="btn btn-primary" type="submit" value="twittear">
        </form>
      </div>
+     <% } %>
 
      <div class="my-3 p-3 bg-body rounded shadow-sm">
        <h6 class="border-bottom pb-2 mb-0">Ultimos mensajes</h6>
@@ -102,7 +105,6 @@
          </p>
        </div>
 
-       <% User us = (User) session.getAttribute("user"); %>
        <% if(us != null){ %>
          <div class="mb-3">
           <form action="respond">
