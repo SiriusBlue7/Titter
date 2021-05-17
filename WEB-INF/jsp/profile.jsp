@@ -46,7 +46,7 @@
              <p>
                <div class="mb-3">
                  <label for="floatingtitle" class="form-label">¿Que quieres compartir con el mundo? </label>
-                 <textarea class="form-control" name="text" rows="4" cols="70" maxlength="280" id="floatingtitle" placeholder="compartelo..."></textarea>
+                 <textarea class="form-control" name="description" rows="4" cols="70" maxlength="280" id="floatingtitle" placeholder="compartelo..."></textarea>
                </div>
                <input class="btn btn-primary" type="submit" value="Editar">
              </p>
