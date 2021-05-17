@@ -102,7 +102,8 @@
          </p>
        </div>
 
-       <% if(prof == true){ %>
+       <% User us = (User) session.getAttribute("user"); %>
+       <% if(us != null){ %>
          <div class="mb-3">
           <form action="respond">
              <textarea class="form-control" name="text" rows="2" cols="35" maxlength="280" id="floatingtitle" placeholder="responde a este mensaje"></textarea>
